@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="CqrsAndMediatr\Handlers\Modify\Accounts\" />
+    <Folder Include="CqrsAndMediatr\Handlers\Modify\Branches\" />
+    <Folder Include="CqrsAndMediatr\Handlers\Modify\Customers\" />
+    <Folder Include="CqrsAndMediatr\Handlers\Modify\Transactions\" />
+    <Folder Include="CqrsAndMediatr\Handlers\Read\Branches\" />
+    <Folder Include="CqrsAndMediatr\Handlers\Read\Customers\" />
+    <Folder Include="CqrsAndMediatr\Handlers\Read\Transactions\" />
+    <Folder Include="DependencyResolvers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="13.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BankingHexagonal.Domain\BankingHexagonal.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
