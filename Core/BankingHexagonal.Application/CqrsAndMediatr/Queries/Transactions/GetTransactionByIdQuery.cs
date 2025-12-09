@@ -1,8 +1,9 @@
-﻿using MediatR;
+﻿using BankingHexagonal.Application.CqrsAndMediatr.Results.ReadResults.Transactions;
+using MediatR;
 
 namespace BankingHexagonal.Application.CqrsAndMediatr.Queries.Transactions
 {
-    public class GetTransactionByIdQuery : IRequest<GetTransactionByIdQuery>
+    public class GetTransactionByIdQuery : IRequest<GetTransactionByIdQueryResult>
     {
         public GetTransactionByIdQuery(int id)
         {

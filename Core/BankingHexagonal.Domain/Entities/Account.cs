@@ -11,6 +11,6 @@
         public int CustomerId { get; set; }
         public virtual Customer Customer { get; set; }
 
-        public ICollection<Transaction> Transactions { get; set; }
+        public virtual ICollection<Transaction> Transactions { get; set; }
     }
 }

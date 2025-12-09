@@ -19,5 +19,22 @@ namespace BankingHexagonal.Persistence.EFData
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<Branch> Branches { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Transaction>()
+                .HasOne(t => t.Account)
+                .WithMany(a => a.Transactions)
+                .HasForeignKey(t => t.AccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+            modelBuilder.Entity<Transaction>()
+                .HasOne<Account>()
+                .WithMany()
+                .HasForeignKey(t => t.TargetAccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
     }
 }

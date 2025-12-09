@@ -1,0 +1,6 @@
+@BankingHexagonal.ApiHost_HostAddress = http://localhost:5009
+
+GET {{BankingHexagonal.ApiHost_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
