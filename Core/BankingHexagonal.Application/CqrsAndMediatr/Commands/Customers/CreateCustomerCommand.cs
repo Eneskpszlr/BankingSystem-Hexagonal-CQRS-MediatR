@@ -13,8 +13,13 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Commands.Customers
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string IdentityNumber { get; set; }
-        public string Address { get; set; }
-        public string Phone { get; set; }
         public string Email { get; set; }
+        public string Phone { get; set; }
+
+        // --- Adres Detayları (Value Object için) ---
+        public string Street { get; set; }
+        public string City { get; set; }
+        public string Country { get; set; }
+        public string ZipCode { get; set; }
     }
 }

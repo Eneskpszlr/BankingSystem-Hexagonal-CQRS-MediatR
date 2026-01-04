@@ -6,18 +6,22 @@ namespace BankingHexagonal.Application.UseCases.Customers
     public class RemoveCustomerUseCase : IRemoveCustomerUseCase
     {
         private readonly ICustomerRepository _repository;
-        public RemoveCustomerUseCase(ICustomerRepository repository)
+        private readonly IUnitOfWork _unitOfWork;
+
+        public RemoveCustomerUseCase(ICustomerRepository repository, IUnitOfWork unitOfWork)
         {
             _repository = repository;
+            _unitOfWork = unitOfWork;
         }
+
         public async Task ExecuteAsync(int id)
         {
-            var exist = await _repository.GetByIdAsync(id);
-            if (exist == null)
-                throw new Exception("Customer bulunamadı");
-            exist.Status = Domain.Enums.DataStatus.Deleted;
-            exist.DeletedDate = DateTime.Now;
-            await _repository.DeleteAsync(exist);
+            var customer = await _repository.GetByIdAsync(id);
+            if (customer == null) throw new Exception("Customer bulunamadı");
+
+            _repository.Delete(customer);
+
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

@@ -2,11 +2,10 @@
 {
     public enum TransactionType
     {
-        Deposit = 1,
-        Withdraw = 2,
-        TransferIn = 3,
-        TransferOut = 4
+        Deposit = 1,        // Para Yatırma (+)
+        Withdraw = 2,       // Para Çekme (-)
+        TransferOut = 3,    // Havale/EFT Gönderimi (-)
+        TransferIn = 4,     // Havale/EFT Gelimi (+)
+        Payment = 5         // Fatura Ödeme (-)
     }
-
-
 }

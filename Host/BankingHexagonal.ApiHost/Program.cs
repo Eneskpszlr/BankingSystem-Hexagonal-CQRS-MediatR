@@ -1,6 +1,6 @@
 using BankingHexagonal.Application.CqrsAndMediatr.Commands.Accounts;
 using BankingHexagonal.Application.DependencyResolvers;
-using BankingHexagonal.Persistence.DependencyResolvers;
+using BankingHexagonal.Persistence.ServiceRegistration;
 using BankingHexagonal.WebApi;
 using BankingHexagonal.Persistence.EFData;
 using Microsoft.EntityFrameworkCore;
@@ -17,10 +17,8 @@ namespace BankingHexagonal.ApiHost
             {
                 cfg.RegisterServicesFromAssembly(typeof(CreateAccountCommand).Assembly);
             });
-            builder.Services.AddRepositoryService();
-            builder.Services.AddDbContextServices();
+            builder.Services.AddPersistenceServices(builder.Configuration);
             builder.Services.AddApplicationServices();
-            builder.Services.AddDbContext<MyContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("MyConnection")));
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

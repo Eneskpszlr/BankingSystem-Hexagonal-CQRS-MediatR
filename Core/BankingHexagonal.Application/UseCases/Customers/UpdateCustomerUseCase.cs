@@ -1,30 +1,43 @@
 ﻿using BankingHexagonal.Application.CqrsAndMediatr.Commands.Customers;
 using BankingHexagonal.Application.PrimaryPorts.CustomerPorts;
 using BankingHexagonal.Domain.SecondaryPorts;
+using BankingHexagonal.Domain.ValueObjects;
 
 namespace BankingHexagonal.Application.UseCases.Customers
 {
     public class UpdateCustomerUseCase : IUpdateCustomerUseCase
     {
         private readonly ICustomerRepository _repository;
-        public UpdateCustomerUseCase(ICustomerRepository repository)
+        private readonly IUnitOfWork _unitOfWork;
+
+        public UpdateCustomerUseCase(ICustomerRepository repository, IUnitOfWork unitOfWork)
         {
             _repository = repository;
+            _unitOfWork = unitOfWork;
         }
+
         public async Task ExecuteAsync(UpdateCustomerCommand command)
         {
-            var exist = await _repository.GetByIdAsync(command.Id);
-            if (exist == null)
-                throw new Exception("Customer bulunamadı");
-            exist.FirstName = command.FirstName;
-            exist.LastName = command.LastName;
-            exist.IdentityNumber = command.IdentityNumber;
-            exist.Address = command.Address;
-            exist.Phone = command.Phone;
-            exist.Email = command.Email;
-            exist.UpdatedDate = DateTime.Now;
-            exist.Status = Domain.Enums.DataStatus.Updated;
-            await _repository.UpdateAsync(exist);
+            var customer = await _repository.GetByIdAsync(command.Id);
+            if (customer == null) throw new Exception("Customer bulunamadı");
+
+            // 1. İsim Güncelleme
+            customer.UpdateName(command.FirstName, command.LastName);
+
+            // 2. İletişim Bilgileri Güncelleme
+            customer.UpdateContactInfo(command.Phone, command.Email);
+
+            // 3. Adres Güncelleme
+            var newAddress = new Address(
+                command.Street,
+                command.City,
+                command.Country,
+                command.ZipCode
+            );
+            customer.UpdateAddress(newAddress);
+
+            // 4. Kayıt
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

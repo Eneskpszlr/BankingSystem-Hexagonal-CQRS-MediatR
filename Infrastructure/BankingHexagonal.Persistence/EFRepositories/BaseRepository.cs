@@ -1,4 +1,4 @@
-﻿using BankingHexagonal.Domain.Interfaces;
+﻿using BankingHexagonal.Domain.Entities.Base;
 using BankingHexagonal.Domain.SecondaryPorts;
 using BankingHexagonal.Persistence.EFData;
 using Microsoft.EntityFrameworkCore;
@@ -24,18 +24,21 @@ namespace BankingHexagonal.Persistence.EFRepositories
         public async Task CreateAsync(T entity)
         {
             await _dbSet.AddAsync(entity);
-            await SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(T entity)
+        public void Delete(T entity)
         {
             _dbSet.Remove(entity);
-            await SaveChangesAsync();
         }
 
-        public async Task<List<T>> GetAllAsync()
+        //Performans için db tarafında
+        public async Task<List<T>> GetAllAsync(bool tracking = true)
         {
-            return await _dbSet.ToListAsync();
+            var query = _dbSet.AsQueryable();
+            if (!tracking)
+                query = query.AsNoTracking();
+
+            return await query.ToListAsync();
         }
 
         public async Task<T> GetByIdAsync(int id)
@@ -43,15 +46,9 @@ namespace BankingHexagonal.Persistence.EFRepositories
             return await _dbSet.FindAsync(id);
         }
 
-        public async Task<int> SaveChangesAsync()
-        {
-            return await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateAsync(T entity)
+        public void Update(T entity)
         {
             _dbSet.Update(entity);
-            await SaveChangesAsync();
         }
 
         public IQueryable<T> Where(Expression<Func<T, bool>> exp)

@@ -6,18 +6,22 @@ namespace BankingHexagonal.Application.UseCases.Branches
     public class RemoveBranchUseCase : IRemoveBranchUseCase
     {
         private readonly IBranchRepository _repository;
-        public RemoveBranchUseCase(IBranchRepository repository)
+        private readonly IUnitOfWork _unitOfWork;
+
+        public RemoveBranchUseCase(IBranchRepository repository, IUnitOfWork unitOfWork)
         {
             _repository = repository;
+            _unitOfWork = unitOfWork;
         }
+
         public async Task ExecuteAsync(int id)
         {
-            var exist = await _repository.GetByIdAsync(id);
-            if (exist == null)
-                throw new Exception("Şube bulunamadı");
-            exist.Status = Domain.Enums.DataStatus.Deleted;
-            exist.DeletedDate = DateTime.Now;
-            await _repository.DeleteAsync(exist);
+            var branch = await _repository.GetByIdAsync(id);
+            if (branch == null) throw new Exception("Şube bulunamadı");
+                
+            _repository.Delete(branch);
+
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

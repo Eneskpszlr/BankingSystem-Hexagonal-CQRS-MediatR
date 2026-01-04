@@ -1,0 +1,10 @@
+﻿namespace BankingHexagonal.Domain.Enums
+{
+    public enum CurrencyCode
+    {
+        TRY = 1,
+        USD = 2,
+        EUR = 3,
+        GBP = 4
+    }
+}

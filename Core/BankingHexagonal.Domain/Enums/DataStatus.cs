@@ -12,6 +12,4 @@ namespace BankingHexagonal.Domain.Enums
         Updated = 2,
         Deleted = 3
     }
-
-
 }

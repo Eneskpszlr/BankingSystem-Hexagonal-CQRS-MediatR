@@ -7,22 +7,23 @@ namespace BankingHexagonal.Application.UseCases.Accounts
     public class UpdateAccountUseCase : IUpdateAccountUseCase
     {
         private readonly IAccountRepository _repository;
-        public UpdateAccountUseCase(IAccountRepository repository)
+        private readonly IUnitOfWork _unitOfWork;
+        public UpdateAccountUseCase(IAccountRepository repository, IUnitOfWork unitOfWork)
         {
             _repository = repository;
+            _unitOfWork = unitOfWork;
         }
         public async Task ExecuteAsync(UpdateAccountCommand command)
         {
-            var exist = await _repository.GetByIdAsync(command.Id);
-            if (exist == null)
-                throw new Exception("Hesap bulunamadı.");
-            exist.AccountNumber = command.AccountNumber;
-            exist.Balance = command.Balance;
-            exist.BranchId = command.BranchId;
-            exist.CustomerId = command.CustomerId;
-            exist.Status = Domain.Enums.DataStatus.Updated;
-            exist.UpdatedDate = DateTime.Now;
-            await _repository.UpdateAsync(exist);
+            var account = await _repository.GetByIdAsync(command.Id);
+            if (account == null) throw new Exception("Hesap bulunamadı.");
+
+            account.UpdateDetails(command.AccountNumber, command.BranchId);
+
+            // Repoda Update çağırmaya gerek yok (Tracking açık).
+            // _repository.Update(account);
+
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

@@ -13,10 +13,9 @@ namespace BankingHexagonal.Application.UseCases.Customers
         }
         public async Task<Customer> ExecuteAsync(int id)
         {
-            var exist = await _repository.GetByIdAsync(id);
-            if (exist == null)
-                throw new Exception("Customer bulunamadı");
-            return exist;
+            var customer = await _repository.GetByIdAsync(id);
+            if (customer == null) throw new Exception("Customer bulunamadı");
+            return customer;
         }
     }
 }
