@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace BankingHexagonal.Application.UseCases.Transactions
 {
@@ -23,7 +24,7 @@ namespace BankingHexagonal.Application.UseCases.Transactions
             _unitOfWork = unitOfWork;
         }
 
-        public async Task ExecuteAsync(DepositTransactionCommand command)
+        public async Task<int> ExecuteAsync(DepositTransactionCommand command)
         {
             var account = await _accountRepository.GetByIdAsync(command.AccountId);
             if (account == null) throw new Exception("Hesap bulunamadı.");
@@ -37,6 +38,8 @@ namespace BankingHexagonal.Application.UseCases.Transactions
 
             // 3. Kaydet (EF Core, Account'u ve içindeki yeni Transaction'ı tek seferde yazar)
             await _unitOfWork.SaveChangesAsync();
+
+            return transaction.Id;
         }
     }
 }

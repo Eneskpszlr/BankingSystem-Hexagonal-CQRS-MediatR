@@ -9,6 +9,6 @@ namespace BankingHexagonal.Application.PrimaryPorts.BranchPorts
 {
     public interface ICreateBranchUseCase
     {
-        Task ExecuteAsync(CreateBranchCommand command);
+        Task<int> ExecuteAsync(CreateBranchCommand command);
     }
 }

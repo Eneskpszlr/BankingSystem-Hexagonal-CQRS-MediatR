@@ -22,7 +22,7 @@ namespace BankingHexagonal.Application.UseCases.Branches
             _unitOfWork = unitOfWork;
         }
 
-        public async Task ExecuteAsync(CreateBranchCommand command)
+        public async Task<int> ExecuteAsync(CreateBranchCommand command)
         {
             // 1. Value Object Oluşturma
             var address = new Address(
@@ -38,6 +38,8 @@ namespace BankingHexagonal.Application.UseCases.Branches
             // 3. Repo ve Kayıt
             await _repository.CreateAsync(branch);
             await _unitOfWork.SaveChangesAsync();
+
+            return branch.Id;
         }
     }
 }

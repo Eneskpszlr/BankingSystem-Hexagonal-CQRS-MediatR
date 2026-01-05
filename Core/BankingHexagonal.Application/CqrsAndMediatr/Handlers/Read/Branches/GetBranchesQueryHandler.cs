@@ -22,11 +22,17 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Read.Branches
         public async Task<List<GetBranchesQueryResult>> Handle(GetBranchesQuery request, CancellationToken cancellationToken)
         {
             var branches = await _useCase.ExecuteAsync();
+
             return branches.Select(b => new GetBranchesQueryResult
             {
                 Id = b.Id,
                 BranchName = b.BranchName,
-                Address = b.Address
+
+                // --- VALUE OBJECT MAPPING ---
+                Street = b.Address.Street,
+                City = b.Address.City,
+                Country = b.Address.Country,
+                ZipCode = b.Address.ZipCode
             }).ToList();
         }
     }

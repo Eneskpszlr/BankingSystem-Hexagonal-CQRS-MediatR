@@ -18,7 +18,7 @@ namespace BankingHexagonal.Application.UseCases.Transactions
             _unitOfWork = unitOfWork;
         }
 
-        public async Task ExecuteAsync(WithdrawTransactionCommand command)
+        public async Task<int> ExecuteAsync(WithdrawTransactionCommand command)
         {
             var account = await _accountRepository.GetByIdAsync(command.AccountId);
             if (account == null) throw new Exception("Hesap bulunamadı.");
@@ -26,9 +26,11 @@ namespace BankingHexagonal.Application.UseCases.Transactions
             var money = new Money(command.Amount, command.CurrencyCode);
 
             // Domain Metodu: Bakiye yetersizse Exception fırlatır, yeterliyse düşer ve log atar.
-            account.Withdraw(money, command.Description);
+            var transaction = account.Withdraw(money, command.Description);
 
             await _unitOfWork.SaveChangesAsync();
+
+            return transaction.Id;
         }
     }
 }

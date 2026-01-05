@@ -12,7 +12,7 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Read.Customers
         {
             _useCase = useCase;
         }
-        public async Task<GetCustomerByIdQueryResult?> Handle(GetCustomerByIdQuery request, CancellationToken cancellationToken)
+        public async Task<GetCustomerByIdQueryResult> Handle(GetCustomerByIdQuery request, CancellationToken cancellationToken)
         {
             var customer = await _useCase.ExecuteAsync(request.Id);
 
@@ -22,9 +22,14 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Read.Customers
                 FirstName = customer.FirstName,
                 LastName = customer.LastName,
                 IdentityNumber = customer.IdentityNumber,
-                Address = customer.Address,
+                Email = customer.Email,
                 Phone = customer.Phone,
-                Email = customer.Email
+
+                // --- VALUE OBJECT MAPPING ---
+                Street = customer.Address.Street,
+                City = customer.Address.City,
+                Country = customer.Address.Country,
+                ZipCode = customer.Address.ZipCode
             };
         }
     }

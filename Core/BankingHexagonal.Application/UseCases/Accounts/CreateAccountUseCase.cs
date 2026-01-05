@@ -21,7 +21,7 @@ namespace BankingHexagonal.Application.UseCases.Accounts
             _unitOfWork = unitOfWork;
         }
 
-        public async Task ExecuteAsync(CreateAccountCommand command)
+        public async Task<int> ExecuteAsync(CreateAccountCommand command)
         {
             // 1. Rich Domain Model: Constructor üzerinden nesne oluşturulur.
             var account = new Account(
@@ -36,6 +36,8 @@ namespace BankingHexagonal.Application.UseCases.Accounts
 
             // 3. Veritabanına kaydet (Transaction Commit)
             await _unitOfWork.SaveChangesAsync();
+
+            return account.Id;
         }
     }
 }

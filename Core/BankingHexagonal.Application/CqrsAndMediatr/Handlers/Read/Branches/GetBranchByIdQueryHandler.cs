@@ -15,11 +15,17 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Read.Branches
         public async Task<GetBranchByIdQueryResult> Handle(GetBranchByIdQuery request, CancellationToken cancellationToken)
         {
             var branch = await _useCase.ExecuteAsync(request.Id);
+
             return new GetBranchByIdQueryResult
             {
                 Id = branch.Id,
                 BranchName = branch.BranchName,
-                Address = branch.Address
+
+                // --- VALUE OBJECT MAPPING ---
+                Street = branch.Address.Street,
+                City = branch.Address.City,
+                Country = branch.Address.Country,
+                ZipCode = branch.Address.ZipCode
             };
         }
     }

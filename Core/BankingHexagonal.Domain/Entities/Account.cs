@@ -63,20 +63,22 @@ namespace BankingHexagonal.Domain.Entities
         // DOMAIN BEHAVIORS (İŞ KURALLARI)
 
         // 1. PARA YATIRMA
-        public void Deposit(Money amount, string description = "Para Yatırma")
+        public Transaction Deposit(Money amount, string description = "Para Yatırma")
         {
             ValidateAccountIsActive();
 
             // Money.Add metodu para birimi kontrolünü (CurrencyMismatch) otomatik yapar.
             Balance = Balance.Add(amount);
 
-            AddTransaction(TransactionType.Deposit, amount, description);
+            var t = AddTransaction(TransactionType.Deposit, amount, description);
 
             UpdatedDate = DateTime.UtcNow;
+
+            return t;
         }
 
         // 2. PARA ÇEKME
-        public void Withdraw(Money amount, string description = "Para Çekme")
+        public Transaction Withdraw(Money amount, string description = "Para Çekme")
         {
             ValidateAccountIsActive();
 
@@ -87,13 +89,14 @@ namespace BankingHexagonal.Domain.Entities
             // Money.Subtract metodu para birimi kontrolünü yapar.
             Balance = Balance.Subtract(amount);
 
-            AddTransaction(TransactionType.Withdraw, amount, description);
+            var t = AddTransaction(TransactionType.Withdraw, amount, description);
 
             UpdatedDate = DateTime.UtcNow;
+            return t;
         }
 
         // 3. TRANSFER GÖNDERME (Giden Havale)
-        public void TransferMoneyTo(Account targetAccount, Money amount, string description = "Transfer Gönderimi")
+        public Transaction TransferMoneyTo(Account targetAccount, Money amount, string description = "Transfer Gönderimi")
         {
             ValidateAccountIsActive();
 
@@ -116,13 +119,14 @@ namespace BankingHexagonal.Domain.Entities
             Balance = Balance.Subtract(amount);
 
             // Kayıt (TargetAccountId dolu gider)
-            AddTransaction(TransactionType.TransferOut, amount, description, targetAccount.Id);
+            var t = AddTransaction(TransactionType.TransferOut, amount, description, targetAccount.Id);
 
             UpdatedDate = DateTime.UtcNow;
+            return t;
         }
 
         // 4. TRANSFER ALMA (Gelen Havale)
-        public void ReceiveMoneyFrom(int senderAccountId, Money amount, string description = "Transfer Alımı")
+        public Transaction ReceiveMoneyFrom(int senderAccountId, Money amount, string description = "Transfer Alımı")
         {
             ValidateAccountIsActive();
 
@@ -131,9 +135,10 @@ namespace BankingHexagonal.Domain.Entities
 
             // Kayıt (TargetAccountId burada 'Parayı Gönderen' olarak tutulabilir veya null geçilebilir. 
             // Muhasebe mantığı için göndereni Target olarak işaretliyoruz.)
-            AddTransaction(TransactionType.TransferIn, amount, description, senderAccountId);
+            var t = AddTransaction(TransactionType.TransferIn, amount, description, senderAccountId);
 
             UpdatedDate = DateTime.UtcNow;
+            return t;
         }
 
 
@@ -156,7 +161,7 @@ namespace BankingHexagonal.Domain.Entities
 
         // PRIVATE HELPERS
 
-        private void AddTransaction(
+        private Transaction AddTransaction(
             TransactionType type,
             Money amount,
             string description,
@@ -173,6 +178,8 @@ namespace BankingHexagonal.Domain.Entities
             );
 
             _transactions.Add(transaction);
+
+            return transaction;
         }
 
         private void ValidateAccountIsActive()

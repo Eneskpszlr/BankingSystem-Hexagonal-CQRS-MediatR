@@ -17,6 +17,7 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Modify.Accounts
             await _useCase.ExecuteAsync(request.Id);
             return new RemoveAccountCommandResult
             {
+                Success = true,
                 Message = "Hesap başarıyla silindi."
             };
         }

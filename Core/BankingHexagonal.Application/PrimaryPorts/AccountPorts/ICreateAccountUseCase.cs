@@ -10,6 +10,6 @@ namespace BankingHexagonal.Application.PrimaryPorts.AccountPorts
 {
     public interface ICreateAccountUseCase
     {
-        Task ExecuteAsync(CreateAccountCommand command);
+        Task<int> ExecuteAsync(CreateAccountCommand command);
     }
 }

@@ -9,7 +9,7 @@ namespace BankingHexagonal.Application.UseCases.Customers
     public class CreateCustomerUseCase : ICreateCustomerUseCase
     {
         private readonly ICustomerRepository _repository;
-        private readonly IUnitOfWork _unitOfWork; // EKLENDİ
+        private readonly IUnitOfWork _unitOfWork;
 
         public CreateCustomerUseCase(ICustomerRepository repository, IUnitOfWork unitOfWork)
         {
@@ -17,7 +17,7 @@ namespace BankingHexagonal.Application.UseCases.Customers
             _unitOfWork = unitOfWork;
         }
 
-        public async Task ExecuteAsync(CreateCustomerCommand command)
+        public async Task<int> ExecuteAsync(CreateCustomerCommand command)
         {
             // 1. Value Object: Adresi oluştur
             var address = new Address(
@@ -40,6 +40,8 @@ namespace BankingHexagonal.Application.UseCases.Customers
             // Kayıt
             await _repository.CreateAsync(customer);
             await _unitOfWork.SaveChangesAsync();
+
+            return customer.Id;
         }
     }
 }

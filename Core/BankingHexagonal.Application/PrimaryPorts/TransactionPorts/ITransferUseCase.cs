@@ -4,6 +4,6 @@ namespace BankingHexagonal.Application.PrimaryPorts.TransactionPorts
 {
     public interface ITransferUseCase
     {
-        Task ExecuteAsync(TransferTransactionCommand command);
+        Task<string> ExecuteAsync(TransferTransactionCommand command);
     }
 }

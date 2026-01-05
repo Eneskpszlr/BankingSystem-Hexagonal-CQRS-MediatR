@@ -18,7 +18,7 @@ namespace BankingHexagonal.Application.UseCases.Transactions
             _unitOfWork = unitOfWork;
         }
 
-        public async Task ExecuteAsync(TransferTransactionCommand command)
+        public async Task<string> ExecuteAsync(TransferTransactionCommand command)
         {
             var fromAccount = await _accountRepository.GetByIdAsync(command.FromAccountId);
             var toAccount = await _accountRepository.GetByIdAsync(command.ToAccountId);
@@ -27,10 +27,11 @@ namespace BankingHexagonal.Application.UseCases.Transactions
                 throw new Exception("Gönderen veya Alıcı hesap bulunamadı.");
 
             var money = new Money(command.Amount, command.CurrencyCode);
+            string refNo = "TR-" + Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
 
             // 1. ADIM: Gönderen Hesaptan Çıkış (TransferOut)
             // Bu metot bakiyeyi düşer, Currency kontrolü yapar ve Out logu atar.
-            fromAccount.TransferMoneyTo(toAccount, money, command.Description);
+            fromAccount.TransferMoneyTo(toAccount, money, command.Description + " Ref:" + refNo);
 
             // 2. ADIM: Alıcı Hesaba Giriş (TransferIn)
             // Bu metot bakiyeyi artırır ve In logu atar.
@@ -38,6 +39,8 @@ namespace BankingHexagonal.Application.UseCases.Transactions
 
             // 3. ADIM: Her ikisini tek transaction'da kaydet
             await _unitOfWork.SaveChangesAsync();
+
+            return refNo;
         }
     }
 }

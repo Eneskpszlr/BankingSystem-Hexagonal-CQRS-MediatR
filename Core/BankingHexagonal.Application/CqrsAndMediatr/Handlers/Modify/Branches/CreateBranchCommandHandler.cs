@@ -21,11 +21,13 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Modify.Branches
 
         public async Task<CreateBranchCommandResult> Handle(CreateBranchCommand request, CancellationToken cancellationToken)
         {
-            await _useCase.ExecuteAsync(request);
+            int createdBranchId = await _useCase.ExecuteAsync(request);
 
             return new CreateBranchCommandResult
             {
-                Message = "Şube başarıyla oluşturuldu."
+                Success = true,
+                Message = "Şube başarıyla oluşturuldu.",
+                EntityId = createdBranchId
             };
         }
     }

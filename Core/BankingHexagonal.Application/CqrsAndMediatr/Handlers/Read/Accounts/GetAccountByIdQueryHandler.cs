@@ -15,11 +15,16 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Read.Accounts
         public async Task<GetAccountByIdQueryResult> Handle(GetAccountByIdQuery request, CancellationToken cancellationToken)
         {
             var account = await _useCase.ExecuteAsync(request.Id);
+
             return new GetAccountByIdQueryResult
             {
                 Id = account.Id,
                 AccountNumber = account.AccountNumber,
-                Balance = account.Balance,
+
+                // --- VALUE OBJECT MAPPING ---
+                Balance = account.Balance.Amount,
+                CurrencyCode = account.Balance.Currency,
+
                 BranchId = account.BranchId,
                 CustomerId = account.CustomerId
             };

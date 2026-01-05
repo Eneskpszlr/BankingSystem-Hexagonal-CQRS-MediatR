@@ -21,10 +21,14 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Modify.Transactio
 
         public async Task<DepositTransactionCommandResult> Handle(DepositTransactionCommand request, CancellationToken cancellationToken)
         {
-            await _useCase.ExecuteAsync(request);
+            // UseCase geriye TransactionId (int) dönmeli
+            int transactionId = await _useCase.ExecuteAsync(request);
+
             return new DepositTransactionCommandResult
             {
-                Message = "Para yatırma işlemi başarıyla gerçekleştirildi.",
+                Success = true,
+                Message = "Para yatırma işlemi başarılı.",
+                EntityId = transactionId // İşlem ID'si
             };
         }
     }
