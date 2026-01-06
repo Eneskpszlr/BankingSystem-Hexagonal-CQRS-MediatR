@@ -34,7 +34,7 @@ namespace BankingHexagonal.Application.UseCases.Transactions
 
             // 2. Domain Metodunu Çağır
             // Bu metot: Bakiyeyi artırır + Transaction kaydını oluşturup listeye ekler.
-            account.Deposit(money, command.Description);
+            var transaction = account.Deposit(money, command.Description);
 
             // 3. Kaydet (EF Core, Account'u ve içindeki yeni Transaction'ı tek seferde yazar)
             await _unitOfWork.SaveChangesAsync();

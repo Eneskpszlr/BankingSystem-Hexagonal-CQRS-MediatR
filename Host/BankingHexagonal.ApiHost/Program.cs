@@ -1,6 +1,7 @@
 using BankingHexagonal.Application.CqrsAndMediatr.Commands.Accounts;
 using BankingHexagonal.Application.DependencyResolvers;
 using BankingHexagonal.Persistence.ServiceRegistration;
+using Presentation.Middlewares;
 using BankingHexagonal.WebApi;
 using BankingHexagonal.Persistence.EFData;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +27,8 @@ namespace BankingHexagonal.ApiHost
             builder.Services.AddSwaggerGen();
             
             var app = builder.Build();
+
+            app.UseGlobalExceptionMiddleware();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

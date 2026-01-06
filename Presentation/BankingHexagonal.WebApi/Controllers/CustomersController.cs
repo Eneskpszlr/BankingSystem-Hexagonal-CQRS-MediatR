@@ -24,30 +24,44 @@ namespace BankingHexagonal.WebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             var result = await _mediator.Send(new GetCustomerByIdQuery(id));
+            if (result == null) 
+                return NotFound("Müşteri bulunamadı.");
             return Ok(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateCustomerCommand command)
+        public async Task<IActionResult> Create([FromBody] CreateCustomerCommand command)
         {
             var result = await _mediator.Send(command);
-            return Ok(result);
+
+            if (!result.Success)
+                return BadRequest(result);
+
+            return CreatedAtAction(nameof(GetById), new { id = result.EntityId }, result);
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(UpdateCustomerCommand command)
+        public async Task<IActionResult> Update([FromBody] UpdateCustomerCommand command)
         {
             var result = await _mediator.Send(command);
+
+            if (!result.Success)
+                return BadRequest(result);
+
             return Ok(result);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _mediator.Send(new RemoveCustomerCommand(id));
+            var result = await _mediator.Send(new RemoveCustomerCommand { Id = id });
+
+            if (!result.Success)
+                return BadRequest(result);
+
             return Ok(result);
         }
     }
