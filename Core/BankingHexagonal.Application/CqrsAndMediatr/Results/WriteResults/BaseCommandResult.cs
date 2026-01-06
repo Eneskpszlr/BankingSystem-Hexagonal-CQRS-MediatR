@@ -8,9 +8,10 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Results.WriteResults
 {
     public class BaseCommandResult
     {
-        public bool Success { get; set; }
+        public bool Success { get; set; } = true;
         public string Message { get; set; }
-        public int? EntityId { get; set; }
+        public int? EntityId { get; set; }      // Hesap, Müşteri, Şube ID'leri için
+        public string? ReferenceNumber { get; set; } // Transfer Dekont No için
         public List<string> Errors { get; set; }
     }
 }

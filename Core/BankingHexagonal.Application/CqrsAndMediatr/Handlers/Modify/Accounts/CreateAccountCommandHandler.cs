@@ -21,11 +21,13 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Modify.Accounts
 
         public async Task<CreateAccountCommandResult> Handle(CreateAccountCommand request, CancellationToken cancellationToken)
         {
-            await _useCase.ExecuteAsync(request);
+            int createdAccountId = await _useCase.ExecuteAsync(request);
 
             return new CreateAccountCommandResult
             {
-                Message = "Hesap başarıyla oluşturuldu."
+                Success = true,
+                Message = "Hesap başarıyla oluşturuldu.",
+                EntityId = createdAccountId
             };
         }
     }

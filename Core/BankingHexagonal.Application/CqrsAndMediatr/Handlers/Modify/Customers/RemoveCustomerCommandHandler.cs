@@ -15,9 +15,11 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Modify.Customers
         public async Task<RemoveCustomerCommandResult> Handle(RemoveCustomerCommand request, CancellationToken cancellationToken)
         {
             await _useCase.ExecuteAsync(request.Id);
+
             return new RemoveCustomerCommandResult
             {
-                Message = "Müşteri başarıyla silindi.",
+                Success = true,
+                Message = "Müşteri başarıyla silindi."
             };
         }
     }

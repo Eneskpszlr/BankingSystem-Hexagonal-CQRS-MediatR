@@ -14,10 +14,13 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Modify.Transactio
         }
         public async Task<WithdrawTransactionCommandResult> Handle(WithdrawTransactionCommand request, CancellationToken cancellationToken)
         {
-            await _useCase.ExecuteAsync(request);
+            int transactionId = await _useCase.ExecuteAsync(request);
+
             return new WithdrawTransactionCommandResult
             {
-                Message = "Para çekme işlemi başarıyla gerçekleştirildi.",
+                Success = true,
+                Message = "Para çekme işlemi başarılı.",
+                EntityId = transactionId
             };
         }
     }

@@ -14,8 +14,7 @@ namespace BankingHexagonal.Application.UseCases.Branches
         public async Task<Branch> ExecuteAsync(int id)
         {
             var branch = await _repository.GetByIdAsync(id);
-            if (branch == null)
-                throw new Exception("Şube bulunamadı");
+            if (branch == null) throw new Exception("Şube bulunamadı");
             return branch;
         }
     }

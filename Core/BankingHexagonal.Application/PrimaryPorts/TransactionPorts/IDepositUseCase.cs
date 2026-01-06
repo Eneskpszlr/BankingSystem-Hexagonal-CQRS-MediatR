@@ -4,6 +4,6 @@ namespace BankingHexagonal.Application.PrimaryPorts.TransactionPorts
 {
     public interface IDepositUseCase
     {
-        Task ExecuteAsync(DepositTransactionCommand command);
+        Task<int> ExecuteAsync(DepositTransactionCommand command);
     }
 }

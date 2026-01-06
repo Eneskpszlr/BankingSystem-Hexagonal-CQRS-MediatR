@@ -19,7 +19,8 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Modify.Accounts
 
             return new UpdateAccountCommandResult
             {
-                Message = "Hesap başarıyla güncellendi."
+                Success = true,
+                Message = "Hesap bilgileri güncellendi."
             };
         }
     }

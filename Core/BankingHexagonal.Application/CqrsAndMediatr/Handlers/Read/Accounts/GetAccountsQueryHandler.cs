@@ -23,11 +23,16 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Read.Accounts
         public async Task<List<GetAccountsQueryResult>> Handle(GetAccountsQuery request, CancellationToken cancellationToken)
         {
             var accounts = await _useCase.ExecuteAsync();
+
             return accounts.Select(a => new GetAccountsQueryResult
             {
                 Id = a.Id,
                 AccountNumber = a.AccountNumber,
-                Balance = a.Balance,
+
+                // --- VALUE OBJECT MAPPING ---
+                Balance = a.Balance.Amount,
+                CurrencyCode = a.Balance.Currency,
+
                 BranchId = a.BranchId,
                 CustomerId = a.CustomerId
             }).ToList();

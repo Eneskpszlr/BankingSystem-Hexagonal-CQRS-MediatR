@@ -13,10 +13,9 @@ namespace BankingHexagonal.Application.UseCases.Accounts
         }
         public async Task<Account> ExecuteAsync(int id)
         {
-            var exist = await _repository.GetByIdAsync(id);
-            if (exist == null)
-                throw new Exception("Hesap bulunamadı.");
-            return exist;
+            var account = await _repository.GetByIdAsync(id);
+            if (account == null) throw new Exception("Hesap bulunamadı.");
+            return account;
         }
     }
 }

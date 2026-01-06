@@ -14,10 +14,14 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Modify.Transactio
         }
         public async Task<TransferTransactionCommandResult> Handle(TransferTransactionCommand request, CancellationToken cancellationToken)
         {
-            await _useCase.ExecuteAsync(request);
+            // UseCase geriye Dekont No (string) dönmeli
+            string refNo = await _useCase.ExecuteAsync(request);
+
             return new TransferTransactionCommandResult
             {
-                Message = "Para transfer işlemi başarıyla gerçekleştirildi.",
+                Success = true,
+                Message = "Transfer işlemi başarılı.",
+                ReferenceNumber = refNo
             };
         }
     }

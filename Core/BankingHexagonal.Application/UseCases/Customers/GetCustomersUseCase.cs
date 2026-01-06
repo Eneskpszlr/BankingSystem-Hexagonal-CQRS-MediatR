@@ -13,7 +13,7 @@ namespace BankingHexagonal.Application.UseCases.Customers
         }
         public async Task<List<Customer>> ExecuteAsync()
         {
-            return await _repository.GetAllAsync();
+            return await _repository.GetAllAsync(tracking: false);
         }
     }
 }

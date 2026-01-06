@@ -11,6 +11,11 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Commands.Branches
     public class CreateBranchCommand : IRequest<CreateBranchCommandResult>
     {
         public string BranchName { get; set; }
-        public string Address { get; set; }
+
+        // Adres Bilgileri (Value Object için gerekli parçalar)
+        public string Street { get; set; }   // Cadde/Sokak/Mahalle
+        public string City { get; set; }     // İl
+        public string Country { get; set; }  // Ülke
+        public string ZipCode { get; set; }  // Posta Kodu
     }
 }

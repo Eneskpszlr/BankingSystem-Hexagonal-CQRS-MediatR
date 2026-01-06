@@ -15,9 +15,11 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Modify.Customers
         public async Task<UpdateCustomerCommandResult> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
         {
             await _useCase.ExecuteAsync(request);
+
             return new UpdateCustomerCommandResult
             {
-                Message = "Müşteri başarıyla güncellendi.",
+                Success = true,
+                Message = "Müşteri başarıyla güncellendi."
             };
         }
     }

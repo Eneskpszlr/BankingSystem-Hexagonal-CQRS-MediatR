@@ -26,12 +26,17 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Read.Transactions
             return transactions.Select(t => new GetTransactionsQueryResult
             {
                 Id = t.Id,
-                Amount = t.Amount,
-                Description = t.Description,
-                TransactionType = t.TransactionType,
+                AccountId = t.AccountId,
                 TargetAccountId = t.TargetAccountId,
-                AccountId = t.AccountId
-            }).ToList();
+                TransactionType = t.TransactionType,
+                Description = t.Description,
+
+                Amount = t.Amount.Amount,
+                CurrencyCode = t.Amount.Currency,
+                ReferenceNumber = t.ReferenceNumber,
+                CreatedDate = t.CreatedDate
+            }).OrderByDescending(x => x.CreatedDate) // En yeni işlem en üstte görünsün
+              .ToList();
         }
     }
 }

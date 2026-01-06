@@ -5,11 +5,6 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Commands.Branches
 {
     public class RemoveBranchCommand : IRequest<RemoveBranchCommandResult>
     {
-        public RemoveBranchCommand(int id)
-        {
-            Id = id;
-        }
-
         public int Id { get; set; }
     }
 }

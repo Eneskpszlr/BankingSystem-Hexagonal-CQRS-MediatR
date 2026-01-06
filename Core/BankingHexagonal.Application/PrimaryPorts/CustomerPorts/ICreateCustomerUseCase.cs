@@ -9,6 +9,6 @@ namespace BankingHexagonal.Application.PrimaryPorts.CustomerPorts
 {
     public interface ICreateCustomerUseCase
     {
-        Task ExecuteAsync(CreateCustomerCommand command);
+        Task<int> ExecuteAsync(CreateCustomerCommand command);
     }
 }

@@ -15,15 +15,20 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Read.Transactions
         }
         public async Task<GetTransactionByIdQueryResult> Handle(GetTransactionByIdQuery request, CancellationToken cancellationToken)
         {
-            var t =  await _useCase.ExecuteAsync(request.Id);
+            var t = await _useCase.ExecuteAsync(request.Id);
+
             return new GetTransactionByIdQueryResult
             {
                 Id = t.Id,
-                Amount = t.Amount,
-                Description = t.Description,
-                TransactionType = t.TransactionType,
+                AccountId = t.AccountId,
                 TargetAccountId = t.TargetAccountId,
-                AccountId = t.AccountId
+                TransactionType = t.TransactionType,
+                Description = t.Description,
+
+                Amount = t.Amount.Amount, //Tutar
+                CurrencyCode = t.Amount.Currency, //Birim
+                ReferenceNumber = t.ReferenceNumber, // Dekont No
+                CreatedDate = t.CreatedDate  // İşlem Tarihi
             };
         }
     }

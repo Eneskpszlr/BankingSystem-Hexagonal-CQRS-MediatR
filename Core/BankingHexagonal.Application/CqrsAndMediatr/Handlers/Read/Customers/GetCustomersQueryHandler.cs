@@ -22,15 +22,21 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Read.Customers
         public async Task<List<GetCustomersQueryResult>> Handle(GetCustomersQuery request, CancellationToken cancellationToken)
         {
             var customers = await _useCase.ExecuteAsync();
+
             return customers.Select(c => new GetCustomersQueryResult
             {
                 Id = c.Id,
                 FirstName = c.FirstName,
                 LastName = c.LastName,
                 IdentityNumber = c.IdentityNumber,
-                Address = c.Address,
+                Email = c.Email,
                 Phone = c.Phone,
-                Email = c.Email
+
+                // --- VALUE OBJECT MAPPING ---
+                Street = c.Address.Street,
+                City = c.Address.City,
+                Country = c.Address.Country,
+                ZipCode = c.Address.ZipCode
             }).ToList();
         }
     }

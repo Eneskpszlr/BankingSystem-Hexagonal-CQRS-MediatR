@@ -21,10 +21,14 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Modify.Customers
 
         public async Task<CreateCustomerCommandResult> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
         {
-            await _useCase.ExecuteAsync(request);
+            // UseCase'den ID'yi alıyoruz
+            int createdCustomerId = await _useCase.ExecuteAsync(request);
+
             return new CreateCustomerCommandResult
             {
+                Success = true,
                 Message = "Müşteri başarıyla oluşturuldu.",
+                EntityId = createdCustomerId // Oluşan ID'yi dönüyoruz
             };
         }
     }

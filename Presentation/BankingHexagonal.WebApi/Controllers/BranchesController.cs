@@ -24,30 +24,44 @@ namespace BankingHexagonal.WebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             var result = await _mediator.Send(new GetBranchByIdQuery(id));
+            if (result == null) 
+                return NotFound("Şube bulunamadı.");
             return Ok(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateBranchCommand command)
+        public async Task<IActionResult> Create([FromBody] CreateBranchCommand command)
         {
             var result = await _mediator.Send(command);
-            return Ok(result);
+
+            if (!result.Success)
+                return BadRequest(result);
+
+            return CreatedAtAction(nameof(GetById), new { id = result.EntityId }, result);
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(UpdateBranchCommand command)
+        public async Task<IActionResult> Update([FromBody] UpdateBranchCommand command)
         {
             var result = await _mediator.Send(command);
+
+            if (!result.Success)
+                return BadRequest(result);
+
             return Ok(result);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _mediator.Send(new RemoveBranchCommand(id));
+            var result = await _mediator.Send(new RemoveBranchCommand { Id = id });
+
+            if (!result.Success)
+                return BadRequest(result);
+
             return Ok(result);
         }
     }

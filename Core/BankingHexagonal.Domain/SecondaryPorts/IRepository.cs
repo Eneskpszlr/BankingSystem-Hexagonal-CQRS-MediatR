@@ -1,4 +1,4 @@
-﻿using BankingHexagonal.Domain.Interfaces;
+﻿using BankingHexagonal.Domain.Entities.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,15 +12,14 @@ namespace BankingHexagonal.Domain.SecondaryPorts
     public interface IRepository<T> where T : class, IEntity
     {
         //Queries
-        Task<List<T>> GetAllAsync();
+        Task<List<T>> GetAllAsync(bool tracking = true);
         Task<T> GetByIdAsync(int id);
         IQueryable<T> Where(Expression<Func<T, bool>> exp);
 
 
         //Commands
         Task CreateAsync(T entity);
-        Task UpdateAsync(T Entity);
-        Task DeleteAsync(T entity);
-        Task<int> SaveChangesAsync();
+        void Update(T Entity);
+        void Delete(T entity);
     }
 }

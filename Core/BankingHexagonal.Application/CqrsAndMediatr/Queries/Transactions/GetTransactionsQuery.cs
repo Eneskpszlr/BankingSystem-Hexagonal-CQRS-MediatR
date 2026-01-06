@@ -10,5 +10,6 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Queries.Transactions
 {
     public class GetTransactionsQuery : IRequest<List<GetTransactionsQueryResult>>
     {
+        public int? AccountId { get; set; }
     }
 }

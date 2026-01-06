@@ -15,8 +15,10 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Modify.Branches
         public async Task<RemoveBranchCommandResult> Handle(RemoveBranchCommand request, CancellationToken cancellationToken)
         {
             await _useCase.ExecuteAsync(request.Id);
+
             return new RemoveBranchCommandResult
             {
+                Success = true,
                 Message = "Şube başarıyla silindi."
             };
         }

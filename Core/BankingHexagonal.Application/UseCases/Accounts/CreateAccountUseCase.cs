@@ -13,25 +13,31 @@ namespace BankingHexagonal.Application.UseCases.Accounts
     public class CreateAccountUseCase : ICreateAccountUseCase
     {
         private readonly IAccountRepository _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CreateAccountUseCase(IAccountRepository repository)
+        public CreateAccountUseCase(IAccountRepository repository, IUnitOfWork unitOfWork)
         {
             _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
-        public async Task ExecuteAsync(CreateAccountCommand command)
+        public async Task<int> ExecuteAsync(CreateAccountCommand command)
         {
-            Account account = new Account
-            {
-                AccountNumber = command.AccountNumber,
-                Balance = command.Balance,
-                BranchId = command.BranchId,
-                CustomerId = command.CustomerId,
-                CreatedDate = DateTime.Now,
-                Status = Domain.Enums.DataStatus.Inserted
-            };
+            // 1. Rich Domain Model: Constructor üzerinden nesne oluşturulur.
+            var account = new Account(
+                command.AccountNumber,
+                command.CustomerId,
+                command.BranchId,
+                command.CurrencyCode
+            );
 
+            // 2. Memory'e ekle
             await _repository.CreateAsync(account);
+
+            // 3. Veritabanına kaydet (Transaction Commit)
+            await _unitOfWork.SaveChangesAsync();
+
+            return account.Id;
         }
     }
 }

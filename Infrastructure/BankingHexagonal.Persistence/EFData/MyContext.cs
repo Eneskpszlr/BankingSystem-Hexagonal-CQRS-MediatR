@@ -1,4 +1,7 @@
 ﻿using BankingHexagonal.Domain.Entities;
+using BankingHexagonal.Domain.Entities.Base;
+using BankingHexagonal.Domain.Enums;
+using BankingHexagonal.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -21,20 +24,16 @@ namespace BankingHexagonal.Persistence.EFData
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfigurationsFromAssembly(System.Reflection.Assembly.GetExecutingAssembly());
+
             base.OnModelCreating(modelBuilder);
+        }
 
-            modelBuilder.Entity<Transaction>()
-                .HasOne(t => t.Account)
-                .WithMany(a => a.Transactions)
-                .HasForeignKey(t => t.AccountId)
-                .OnDelete(DeleteBehavior.Restrict);
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.AddInterceptors(new AuditableEntityInterceptor());
 
-
-            modelBuilder.Entity<Transaction>()
-                .HasOne<Account>()
-                .WithMany()
-                .HasForeignKey(t => t.TargetAccountId)
-                .OnDelete(DeleteBehavior.Restrict);
+            base.OnConfiguring(optionsBuilder);
         }
     }
 }

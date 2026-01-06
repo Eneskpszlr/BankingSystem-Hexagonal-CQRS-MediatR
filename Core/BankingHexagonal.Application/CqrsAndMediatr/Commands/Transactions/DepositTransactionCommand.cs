@@ -12,6 +12,7 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Commands.Transactions
     {
         public int AccountId { get; set; }
         public decimal Amount { get; set; }
+        public string CurrencyCode { get; set; }
         public string? Description { get; set; }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using BankingHexagonal.Domain.Entities;
-using BankingHexagonal.Domain.Interfaces;
 
 namespace BankingHexagonal.Domain.SecondaryPorts
 {

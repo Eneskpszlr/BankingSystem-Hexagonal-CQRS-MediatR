@@ -13,10 +13,9 @@ namespace BankingHexagonal.Application.UseCases.Transactions
         }
         public async Task<Transaction> ExecuteAsync(int id)
         {
-            var exist = await _repository.GetByIdAsync(id);
-            if (exist == null)
-                throw new Exception("İşlem bulunamadı");
-            return exist;
+            var transaction = await _repository.GetByIdAsync(id);
+            if (transaction == null) throw new Exception("İşlem bulunamadı");
+            return transaction;
         }
     }
 }

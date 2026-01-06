@@ -17,8 +17,10 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Modify.Branches
         public async Task<UpdateBranchCommandResult> Handle(UpdateBranchCommand request, CancellationToken cancellationToken)
         {
             await _useCase.ExecuteAsync(request);
+
             return new UpdateBranchCommandResult
             {
+                Success = true,
                 Message = "Şube başarıyla güncellendi."
             };
         }

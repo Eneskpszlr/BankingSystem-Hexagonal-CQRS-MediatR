@@ -3,60 +3,44 @@ using BankingHexagonal.Application.PrimaryPorts.TransactionPorts;
 using BankingHexagonal.Domain.Entities;
 using BankingHexagonal.Domain.Enums;
 using BankingHexagonal.Domain.SecondaryPorts;
+using BankingHexagonal.Domain.ValueObjects;
 
 namespace BankingHexagonal.Application.UseCases.Transactions
 {
     public class TransferTransactionUseCase : ITransferUseCase
     {
         private readonly IAccountRepository _accountRepository;
-        private readonly ITransactionRepository _transactionRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public TransferTransactionUseCase(IAccountRepository accountRepository, ITransactionRepository transactionRepository)
+        public TransferTransactionUseCase(IAccountRepository accountRepository, IUnitOfWork unitOfWork)
         {
             _accountRepository = accountRepository;
-            _transactionRepository = transactionRepository;
+            _unitOfWork = unitOfWork;
         }
 
-        public async Task ExecuteAsync(TransferTransactionCommand command)
+        public async Task<string> ExecuteAsync(TransferTransactionCommand command)
         {
-            var from = await _accountRepository.GetByIdAsync(command.FromAccountId);
-            var to = await _accountRepository.GetByIdAsync(command.ToAccountId);
+            var fromAccount = await _accountRepository.GetByIdAsync(command.FromAccountId);
+            var toAccount = await _accountRepository.GetByIdAsync(command.ToAccountId);
 
-            if (from == null || to == null)
-                throw new Exception("Hesap bulunamadı.");
+            if (fromAccount == null || toAccount == null)
+                throw new Exception("Gönderen veya Alıcı hesap bulunamadı.");
 
-            if (from.Balance < command.Amount)
-                throw new Exception("Yetersiz bakiye.");
+            var money = new Money(command.Amount, command.CurrencyCode);
+            string refNo = "TR-" + Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
 
-            from.Balance -= command.Amount;
-            from.UpdatedDate = DateTime.Now;
-            await _accountRepository.UpdateAsync(from);
+            // 1. ADIM: Gönderen Hesaptan Çıkış (TransferOut)
+            // Bu metot bakiyeyi düşer, Currency kontrolü yapar ve Out logu atar.
+            fromAccount.TransferMoneyTo(toAccount, money, command.Description + " Ref:" + refNo);
 
-            to.Balance += command.Amount;
-            to.UpdatedDate = DateTime.Now;
-            await _accountRepository.UpdateAsync(to);
+            // 2. ADIM: Alıcı Hesaba Giriş (TransferIn)
+            // Bu metot bakiyeyi artırır ve In logu atar.
+            toAccount.ReceiveMoneyFrom(fromAccount.Id, money, command.Description);
 
-            // Transaction log – gönderici
-            await _transactionRepository.CreateAsync(new Transaction
-            {
-                AccountId = from.Id,
-                Amount = -command.Amount,
-                TransactionType = TransactionType.TransferOut,
-                Description = command.Description,
-                CreatedDate = DateTime.Now,
-                Status = DataStatus.Inserted
-            });
+            // 3. ADIM: Her ikisini tek transaction'da kaydet
+            await _unitOfWork.SaveChangesAsync();
 
-            // Transaction log – alıcı
-            await _transactionRepository.CreateAsync(new Transaction
-            {
-                AccountId = to.Id,
-                Amount = command.Amount,
-                TransactionType = TransactionType.TransferIn,
-                Description = command.Description,
-                CreatedDate = DateTime.Now,
-                Status = DataStatus.Inserted
-            });
+            return refNo;
         }
     }
 }
