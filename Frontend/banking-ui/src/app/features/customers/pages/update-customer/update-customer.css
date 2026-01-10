@@ -1,0 +1,92 @@
+/* --- LAYOUT YAPISI --- */
+.layout-sidebar {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+}
+
+/* --- KART GENEL STİLİ --- */
+.card-panel {
+  background: var(--bg-card);
+  padding: 2rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  height: fit-content;
+}
+
+/* --- SOL TARAFTAKİ BİLGİ KARTI --- */
+.info-card h3 {
+  color: var(--primary-color);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+  margin-bottom: 1.5rem;
+}
+
+.info-group {
+  margin-top: 1rem;
+}
+
+.info-group label {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  display: block;
+}
+
+.info-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.letter-spacing {
+  letter-spacing: 1px;
+}
+
+.info-warning {
+  margin-top: 1.5rem;
+  font-size: 0.8rem;
+  color: var(--warning-color);
+}
+
+/* --- SAĞ TARAFTAKİ FORM GRIDLERİ --- */
+.form-grid-2-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-grid-3-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+/* --- BUTONLAR --- */
+.form-actions {
+  margin-top: 2rem;
+  display: flex;
+  gap: 10px;
+}
+
+/* --- ANİMASYON --- */
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- MOBİL UYUM --- */
+@media (max-width: 768px) {
+  .layout-sidebar {
+    grid-template-columns: 1fr;
+  }
+  
+  /* Form içindeki gridleri alt alta al */
+  .form-grid-2-col,
+  .form-grid-3-col {
+    grid-template-columns: 1fr;
+  }
+}

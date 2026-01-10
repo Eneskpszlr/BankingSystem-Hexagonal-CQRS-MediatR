@@ -1,0 +1,42 @@
+/* --- YARDIMCI SINIFLAR --- */
+.text-right {
+  text-align: right;
+}
+
+.fw-500 {
+  font-weight: 500;
+}
+
+.empty-state {
+  text-align: center; 
+  padding: 2rem; 
+  color: #94a3b8;
+}
+
+/* Butonlar Arası Boşluk */
+.actions-cell a {
+  margin-right: 5px;
+}
+
+/* --- BADGE STİLİ --- */
+.badge {
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  display: inline-block;
+}
+
+.badge-info {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+/* --- ANİMASYON --- */
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

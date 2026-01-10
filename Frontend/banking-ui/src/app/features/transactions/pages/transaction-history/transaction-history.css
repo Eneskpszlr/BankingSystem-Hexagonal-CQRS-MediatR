@@ -1,0 +1,60 @@
+/* --- FİLTRE KARTI --- */
+.filter-card {
+  background: var(--bg-card);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  margin-bottom: 2rem;
+}
+
+.filter-input {
+  max-width: 400px;
+  margin-bottom: 0;
+}
+
+/* --- SEÇİM YAPILMADI DURUMU --- */
+.no-selection-state {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-muted);
+  border: 2px dashed var(--border-color);
+  border-radius: 8px;
+}
+
+/* --- YARDIMCI SINIFLAR --- */
+.text-right {
+  text-align: right;
+}
+
+.fw-600 {
+  font-weight: 600;
+}
+
+.empty-state {
+  text-align: center; 
+  padding: 2rem; 
+  color: #94a3b8; 
+}
+
+/* --- RENKLENDİRMELER --- */
+.text-danger { color: var(--danger-color); }
+.text-success { color: var(--success-color); }
+
+.badge {
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  display: inline-block;
+}
+.badge-success { background: rgba(16, 185, 129, 0.2); color: var(--success-color); }
+.badge-danger  { background: rgba(239, 68, 68, 0.2);  color: var(--danger-color); }
+
+/* --- ANİMASYON --- */
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

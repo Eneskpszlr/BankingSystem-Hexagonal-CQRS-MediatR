@@ -1,0 +1,68 @@
+<app-loader [isLoading]="isLoading"></app-loader>
+
+<app-confirm-dialog 
+  [isOpen]="isDeleteDialogOpen" 
+  title="Müşteriyi Sil" 
+  message="Bu müşteriyi silmek üzeresiniz. İlişkili hesaplar etkilenebilir. Devam edilsin mi?"
+  (confirm)="confirmDelete()" 
+  (cancel)="cancelDelete()">
+</app-confirm-dialog>
+
+<div class="container fade-in">
+  
+  <div class="page-header">
+    <h2 class="page-title">Müşteri Listesi</h2>
+    <a routerLink="/customers/create" class="btn btn-primary">
+      <span>+</span> Yeni Müşteri
+    </a>
+  </div>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Ad Soyad</th>
+          <th>TC Kimlik No</th>
+          <th>İletişim</th>
+          <th>Adres (Şehir)</th>
+          <th class="text-right">İşlemler</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        @for (customer of customers; track customer.id) {
+          <tr>
+            <td>#{{ customer.id }}</td>
+            <td class="fw-500">
+              {{ customer.firstName }} {{ customer.lastName }}
+            </td>
+            <td>{{ customer.identityNumber }}</td>
+            <td>
+              <div class="email-text">{{ customer.email }}</div>
+              <div class="phone-text">{{ customer.phone }}</div>
+            </td>
+            <td>
+              {{ customer.city }} / {{ customer.country }}
+            </td>
+            <td class="text-right actions-cell">
+              <a [routerLink]="['/customers/update', customer.id]" class="btn btn-sm btn-secondary">
+                Düzenle
+              </a>
+              <button class="btn btn-sm btn-danger" (click)="onDeleteClick(customer.id)">
+                Sil
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6" class="empty-state">
+              Kayıtlı müşteri bulunamadı.
+            </td>
+          </tr>
+        }
+
+      </tbody>
+    </table>
+  </div>
+</div>

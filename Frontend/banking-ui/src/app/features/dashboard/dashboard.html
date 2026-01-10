@@ -1,0 +1,86 @@
+<app-loader [isLoading]="isLoading"></app-loader>
+
+<div class="container fade-in">
+  
+  <div class="welcome-section">
+    <h1>Hoş Geldiniz, Admin 👋</h1>
+    <p>Bankacılık yönetim paneline genel bakış.</p>
+  </div>
+
+  <div class="stats-grid">
+    
+    <div class="stat-card blue-gradient">
+      <div class="icon">💰</div>
+      <div class="info">
+        <h3>Toplam Mevduat (TRY)</h3>
+        <div class="value">{{ stats.totalBalanceTRY | currency:'TRY':'symbol-narrow':'1.0-0' }}</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="icon">👥</div>
+      <div class="info">
+        <h3>Toplam Müşteri</h3>
+        <div class="value">{{ stats.totalCustomers }}</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="icon">💳</div>
+      <div class="info">
+        <h3>Aktif Hesaplar</h3>
+        <div class="value">{{ stats.totalAccounts }}</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="icon">🏢</div>
+      <div class="info">
+        <h3>Şubeler</h3>
+        <div class="value">{{ stats.totalBranches }}</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="dashboard-sections">
+    
+    <div class="section-card">
+      <h3>⚡ Hızlı İşlemler</h3>
+      <div class="shortcuts">
+        <a routerLink="/accounts/create" class="shortcut-btn">
+          <span>➕</span> Yeni Hesap Aç
+        </a>
+        <a routerLink="/transactions/create" class="shortcut-btn">
+          <span>💸</span> Para Transferi Yap
+        </a>
+        <a routerLink="/customers/create" class="shortcut-btn">
+          <span>👤</span> Müşteri Ekle
+        </a>
+        <a routerLink="/branches" class="shortcut-btn">
+          <span>📍</span> Şubeleri Listele
+        </a>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <h3>📢 Sistem Durumu</h3>
+      <div class="system-status">
+        <div class="status-item">
+          <span class="dot green"></span>
+          <span>API Bağlantısı: <strong>Aktif</strong></span>
+        </div>
+        <div class="status-item">
+          <span class="dot green"></span>
+          <span>Veritabanı: <strong>Bağlı</strong></span>
+        </div>
+        <div class="status-item">
+          <span class="dot orange"></span>
+          <span>Son Yedekleme: <strong>2 Saat Önce</strong></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
