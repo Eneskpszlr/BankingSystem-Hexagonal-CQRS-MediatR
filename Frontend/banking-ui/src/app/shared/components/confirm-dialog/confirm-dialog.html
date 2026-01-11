@@ -11,8 +11,15 @@
       </div>
       
       <div class="modal-footer">
-        <button class="btn btn-secondary" (click)="onCancel()">Vazgeç</button>
-        <button class="btn btn-danger" (click)="onConfirm()">Onayla ve Sil</button>
+        <button type="button" class="btn btn-secondary" (click)="onCancel()">
+          {{ cancelText }}
+        </button>
+        
+        <button type="button" class="btn" 
+          [ngClass]="'btn-' + type" 
+          (click)="onConfirm()">
+          {{ confirmText }}
+        </button>
       </div>
 
     </div>

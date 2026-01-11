@@ -21,10 +21,18 @@ namespace BankingHexagonal.Application.UseCases.Transactions
         public async Task<string> ExecuteAsync(TransferTransactionCommand command)
         {
             var fromAccount = await _accountRepository.GetByIdAsync(command.FromAccountId);
-            var toAccount = await _accountRepository.GetByIdAsync(command.ToAccountId);
+            var toAccount = await _accountRepository.GetByAccountNumberAsync(command.ToAccountNumber);
 
-            if (fromAccount == null || toAccount == null)
-                throw new Exception("Gönderen veya Alıcı hesap bulunamadı.");
+            if (fromAccount == null)
+                throw new Exception("Gönderen hesap bulunamadı.");
+
+            if (toAccount == null)
+                throw new Exception("Alıcı hesap numarası hatalı.");
+
+            if (fromAccount.Id == toAccount.Id)
+            {
+                throw new Exception("Kendi hesabınıza transfer yapamazsınız.");
+            }
 
             var money = new Money(command.Amount, command.CurrencyCode);
             string refNo = "TR-" + Guid.NewGuid().ToString().Substring(0, 8).ToUpper();

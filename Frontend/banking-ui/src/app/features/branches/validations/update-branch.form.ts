@@ -25,5 +25,12 @@ export function updateBranchForm(): UpdateBranchFormGroup {
 
 export function toUpdateBranchRequest(form: UpdateBranchFormGroup): UpdateBranchRequest {
   const raw = form.getRawValue();
-  return { ...raw };
+  return {
+    id: raw.id,
+    branchName: raw.name,
+    street: raw.street,
+    city: raw.city,
+    country: raw.country,
+    zipCode: raw.zipCode
+  }
 }

@@ -29,11 +29,11 @@ namespace BankingHexagonal.ApiHost
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAngularApp",
-                    builder =>
+                    policy =>
                     {
-                        builder.WithOrigins("http://localhost:4200")
-                               .AllowAnyHeader()
-                               .AllowAnyMethod();
+                        policy.WithOrigins("http://localhost:4200")
+                              .AllowAnyHeader()
+                              .AllowAnyMethod();
                     });
             });
 
@@ -49,6 +49,8 @@ namespace BankingHexagonal.ApiHost
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors("AllowAngularApp");
 
             app.UseAuthorization();
 

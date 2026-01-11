@@ -1,79 +1,90 @@
-<div class="container fade-in">
-  
-  <div class="page-header">
-    <h2 class="page-title">Yeni Müşteri Kaydı</h2>
-  </div>
+@if (isSubmitting) {
+  <app-loader [isLoading]="true"></app-loader>
+} @else {
 
-  <div class="form-card">
+  <div class="container fade-in">
     
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="page-header">
+      <h2 class="page-title">Yeni Müşteri Kaydı</h2>
+    </div>
+
+    @if (errorMessage) {
+      <div class="alert alert-danger" style="background: #ffebee; color: #c62828; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border: 1px solid #ef9a9a;">
+        <strong>Hata:</strong> {{ errorMessage }}
+      </div>
+    }
+
+    <div class="form-card">
       
-      <div class="form-grid-2-col">
-        <div class="form-group">
-          <label>Ad</label>
-          <input type="text" formControlName="firstName" placeholder="Örn: Ahmet">
-          @if (hasError('firstName', 'required')) { <div class="error-message">Ad zorunludur.</div> }
-        </div>
-
-        <div class="form-group">
-          <label>Soyad</label>
-          <input type="text" formControlName="lastName" placeholder="Örn: Yılmaz">
-          @if (hasError('lastName', 'required')) { <div class="error-message">Soyad zorunludur.</div> }
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>TC Kimlik Numarası</label>
-        <input type="text" formControlName="identityNumber" placeholder="11 haneli TC No" maxlength="11">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
         
-        @if (hasError('identityNumber', 'required')) { 
-          <div class="error-message">TC Kimlik No zorunludur.</div> 
-        }
-        @if (hasError('identityNumber', 'invalidTc')) { 
-          <div class="error-message">Geçersiz TC Kimlik Numarası.</div> 
-        }
-      </div>
+        <div class="form-grid-2-col">
+          <div class="form-group">
+            <label>Ad</label>
+            <input type="text" formControlName="firstName" placeholder="Örn: Ahmet">
+            @if (hasError('firstName', 'required')) { <div class="error-message">Ad zorunludur.</div> }
+            @if (hasError('firstName', 'minlength')) { <div class="error-message">En az 2 karakter giriniz.</div> }
+          </div>
 
-      <div class="form-grid-2-col">
-        <div class="form-group">
-          <label>E-Posta</label>
-          <input type="email" formControlName="email" placeholder="ornek@email.com">
-          @if (hasError('email', 'email')) { <div class="error-message">Geçerli bir email giriniz.</div> }
+          <div class="form-group">
+            <label>Soyad</label>
+            <input type="text" formControlName="lastName" placeholder="Örn: Yılmaz">
+            @if (hasError('lastName', 'required')) { <div class="error-message">Soyad zorunludur.</div> }
+          </div>
         </div>
 
         <div class="form-group">
-          <label>Telefon</label>
-          <input type="text" formControlName="phone" placeholder="0555 123 45 67">
+          <label>TC Kimlik Numarası</label>
+          <input type="text" formControlName="identityNumber" placeholder="11 haneli TC No" maxlength="11">
+          
+          @if (hasError('identityNumber', 'required')) { 
+            <div class="error-message">TC Kimlik No zorunludur.</div> 
+          }
+          @if (hasError('identityNumber', 'invalidTc')) { 
+            <div class="error-message">Geçersiz TC Kimlik Numarası.</div> 
+          }
         </div>
-      </div>
 
-      <div class="form-group">
-        <label>Adres (Sokak/Cadde)</label>
-        <input type="text" formControlName="street" placeholder="Atatürk Cad. No:1">
-      </div>
+        <div class="form-grid-2-col">
+          <div class="form-group">
+            <label>E-Posta</label>
+            <input type="email" formControlName="email" placeholder="ornek@email.com">
+            @if (hasError('email', 'email')) { <div class="error-message">Geçerli bir email giriniz.</div> }
+          </div>
 
-      <div class="form-grid-3-col">
+          <div class="form-group">
+            <label>Telefon</label>
+            <input type="text" formControlName="phone" placeholder="0555 123 45 67">
+          </div>
+        </div>
+
         <div class="form-group">
-          <label>Şehir</label>
-          <input type="text" formControlName="city" placeholder="İstanbul">
+          <label>Adres (Sokak/Cadde)</label>
+          <input type="text" formControlName="street" placeholder="Atatürk Cad. No:1">
         </div>
-        <div class="form-group">
-          <label>Ülke</label>
-          <input type="text" formControlName="country" placeholder="Türkiye">
-        </div>
-        <div class="form-group">
-          <label>Posta Kodu</label>
-          <input type="text" formControlName="zipCode" placeholder="34000">
-        </div>
-      </div>
 
-      <div class="form-actions">
-        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
-          {{ isSubmitting ? 'Kaydediliyor...' : 'Müşteriyi Kaydet' }}
-        </button>
-        <a routerLink="/customers" class="btn btn-secondary">Vazgeç</a>
-      </div>
+        <div class="form-grid-3-col">
+          <div class="form-group">
+            <label>Şehir</label>
+            <input type="text" formControlName="city" placeholder="İstanbul">
+          </div>
+          <div class="form-group">
+            <label>Ülke</label>
+            <input type="text" formControlName="country" placeholder="Türkiye">
+          </div>
+          <div class="form-group">
+            <label>Posta Kodu</label>
+            <input type="text" formControlName="zipCode" placeholder="34000">
+          </div>
+        </div>
 
-    </form>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Müşteriyi Kaydet</button>
+          <a routerLink="/customers" class="btn btn-secondary">Vazgeç</a>
+        </div>
+
+      </form>
+    </div>
   </div>
-</div>
+
+}

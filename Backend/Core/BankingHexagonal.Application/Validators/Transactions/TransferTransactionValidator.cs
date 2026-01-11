@@ -12,10 +12,9 @@ namespace BankingHexagonal.Application.Validators.Transactions
                 .GreaterThan(0).WithMessage("Gönderen Hesap ID geçersiz.");
 
             // Alıcı Hesap
-            RuleFor(x => x.ToAccountId)
-                .GreaterThan(0).WithMessage("Alıcı Hesap ID geçersiz.")
-                // KENDİNE TRANSFER ENGELİ
-                .NotEqual(x => x.FromAccountId).WithMessage("Gönderen ve Alıcı hesap aynı olamaz.");
+            RuleFor(x => x.ToAccountNumber)
+                .NotEmpty().WithMessage("Alıcı Hesap Numarası boş olamaz.")
+                .MinimumLength(5).WithMessage("Hesap numarası çok kısa.");
 
             // Tutar
             RuleFor(x => x.Amount)

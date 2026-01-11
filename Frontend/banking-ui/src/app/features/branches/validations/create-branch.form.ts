@@ -23,7 +23,15 @@ export function createBranchForm(): CreateBranchFormGroup {
   });
 }
 
-export function toCreateBranchRequest(form: CreateBranchFormGroup): CreateBranchRequest {
+export function toCreateBranchRequest(form: CreateBranchFormGroup): any {
   const raw = form.getRawValue();
-  return { ...raw }; // Alan isimleri birebir aynı olduğu için spread operatörü kullanabiliriz
+
+  return {
+    branchName: raw.name,
+    branchCode: raw.code,
+    street: raw.street,    
+    city: raw.city,
+    country: raw.country,
+    zipCode: raw.zipCode
+  };
 }

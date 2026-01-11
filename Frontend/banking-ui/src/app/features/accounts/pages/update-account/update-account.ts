@@ -1,10 +1,11 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { finalize } from 'rxjs';
 import { AccountService } from '../../services/account.service';
-import { updateAccountForm, toUpdateAccountRequest } from '../../validations/update-account.form';
 import { Loader } from '../../../../shared/components/loader/loader';
+import { NotificationService } from '../../../../core/services/notification';
 
 @Component({
   selector: 'app-update-account',
@@ -12,59 +13,71 @@ import { Loader } from '../../../../shared/components/loader/loader';
   templateUrl: './update-account.html',
   styleUrl: './update-account.css',
 })
-export class UpdateAccount implements OnInit{
+export class UpdateAccount implements OnInit {
   private _accountService = inject(AccountService);
+  private _notificationService = inject(NotificationService);
   private _route = inject(ActivatedRoute);
   private _router = inject(Router);
+  private _fb = inject(FormBuilder);
+  private cd = inject(ChangeDetectorRef);
 
-  // 1. Update Formunu Factory'den üretiyoruz
-  form = updateAccountForm();
+  form = this._fb.group({
+    id: [0, Validators.required],
+    status: ['1', Validators.required] 
+  });
 
-  // State
-  accountId!: number;
-  isLoading = true;      // Veriyi çekerken
-  isSubmitting = false;  // Kaydederken
-
-  // Backend'den gelen Account verisini ekranda "Read-Only" göstermek için saklayalım
-  // (Çünkü formda Balance, Currency yok, ama kullanıcı neyi düzenlediğini bilmeli)
+  accountId: number = 0;
+  isLoading = true;      
+  isSubmitting = false;  
   currentAccountInfo: any = null; 
 
   ngOnInit(): void {
-    // URL'den ID'yi al: /accounts/update/5 -> 5
     const id = this._route.snapshot.paramMap.get('id');
     if (id) {
       this.accountId = Number(id);
       this.loadAccountData(this.accountId);
+    } else {
+      this._router.navigate(['/accounts']);
     }
   }
 
-  // 2. Mevcut Veriyi Getir ve Forma Doldur
   loadAccountData(id: number) {
-    this._accountService.getById(id).subscribe({
-      next: (response) => {
-        const data = response.data;
-        this.currentAccountInfo = data;
+    this.isLoading = true;
 
-        // Formu Doldur (Patch Value)
-        this.form.patchValue({
-          id: data.id,
-          // Backend modelinde 'name' (hesap takma adı) varsa buraya gelir, yoksa boş kalır
-          // name: data.name, 
-          status: data.status
-        });
+    this._accountService.getById(id)
+      .pipe(finalize(() => {
+          this.isLoading = false;
+          this.cd.detectChanges();
+      }))
+      .subscribe({
+        next: (response: any) => {
+          const data = response.data || response;
+          this.currentAccountInfo = data;
 
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Hesap bulunamadı', err);
-        this.isLoading = false;
-        // Hata varsa listeye geri atabiliriz
-        this._router.navigate(['/accounts']);
-      }
-    });
+          if (data) {
+            let statusValue = '1';
+
+            if (data.status === 'Deleted' || data.status === 'Passive' || data.status === '3' || data.status === 3) {
+              statusValue = '3';
+            } 
+            else {
+              statusValue = '1';
+            }
+
+            this.form.patchValue({
+              id: data.id,
+              status: statusValue
+            });
+          }
+        },
+        error: (err) => {
+          console.error(err);
+          this._notificationService.error('Hesap bilgileri yüklenemedi.');
+          this._router.navigate(['/accounts']);
+        }
+      });
   }
 
-  // 3. Güncelle Butonuna Basınca
   onSubmit() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -73,19 +86,32 @@ export class UpdateAccount implements OnInit{
 
     this.isSubmitting = true;
 
-    // Factory Mapper ile DTO oluştur
-    const request = toUpdateAccountRequest(this.form);
+    const raw = this.form.getRawValue();
 
-    this._accountService.update(request).subscribe({
-      next: () => {
-        console.log('Güncelleme başarılı');
-        this.isSubmitting = false;
-        this._router.navigate(['/accounts']);
-      },
-      error: (err) => {
-        console.error('Güncelleme hatası', err);
-        this.isSubmitting = false;
-      }
-    });
+    const request = {
+      id: this.accountId,
+      status: Number(raw.status),
+      accountNumber: this.currentAccountInfo?.accountNumber,
+      customerId: this.currentAccountInfo?.customerId,
+      branchId: this.currentAccountInfo?.branchId,
+      currencyCode: this.currentAccountInfo?.currencyCode
+    };
+
+    console.log('Backend\'e giden paket:', request);
+
+    this._accountService.update(request as any)
+      .pipe(finalize(() => {
+          this.isSubmitting = false;
+          this.cd.detectChanges();
+      }))
+      .subscribe({
+        next: () => {
+          this._notificationService.success('Hesap durumu güncellendi! 🎉');
+          this._router.navigate(['/accounts']);
+        },
+        error: (err) => {
+          console.error('Güncelleme hatası', err);
+        }
+      });
   }
 }

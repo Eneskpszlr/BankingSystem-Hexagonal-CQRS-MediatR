@@ -1,8 +1,7 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { CreateAccountRequest } from '../../../core/models/accounts';
 import { CustomValidators } from '../../../shared/validators/custom-validators'; 
 
-// 1. Formun İçeriğini Tanımlıyoruz (Tip Güvenliği için)
+// 1. Formun İçeriğini Tanımlıyoruz
 export type CreateAccountFormContent = {
   customerId: FormControl<number>;
   branchId: FormControl<number>;
@@ -53,13 +52,15 @@ export function createAccountForm(): CreateAccountFormGroup {
 }
 
 // 4. Form Verisini Backend DTO'suna Çeviren Mapper
-export function toCreateAccountRequest(form: CreateAccountFormGroup): CreateAccountRequest {
+export function toCreateAccountRequest(form: CreateAccountFormGroup): any {
   const raw = form.getRawValue();
-  
+  const randomAccountNumber = Math.floor(1000000000 + Math.random() * 9000000000).toString();
+
   return {
     customerId: raw.customerId,
     branchId: raw.branchId,
     initialBalance: raw.initialBalance,
-    currencyCode: raw.currencyCode
+    currencyCode: raw.currencyCode,
+    accountNumber: randomAccountNumber 
   };
 }

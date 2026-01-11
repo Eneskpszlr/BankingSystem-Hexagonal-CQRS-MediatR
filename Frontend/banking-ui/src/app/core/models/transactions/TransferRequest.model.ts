@@ -1,5 +1,7 @@
-import { TransactionRequest } from "./TransactionRequest.model";
-
-export interface TransferRequest extends TransactionRequest {
-    targetAccountId: number;
+export interface TransferRequest {
+    fromAccountId: number; 
+    toAccountNumber: string;
+    amount: number;
+    currencyCode: string;
+    description: string;
 }

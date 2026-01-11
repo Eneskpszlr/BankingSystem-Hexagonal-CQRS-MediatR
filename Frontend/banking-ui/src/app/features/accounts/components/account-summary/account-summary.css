@@ -16,22 +16,75 @@
   border-bottom: 1px solid rgba(255,255,255,0.05);
   padding-bottom: 0.5rem;
 }
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
 .info-row label {
   font-size: 0.8rem;
   color: var(--text-muted);
   display: block;
+  margin-bottom: 0.25rem;
 }
+
 .info-value {
   font-size: 1.1rem;
   font-weight: 500;
   color: var(--text-main);
 }
+
 .text-danger { color: var(--danger-color); }
 
 .badge {
   padding: 0.25rem 0.6rem;
   border-radius: 4px;
   font-size: 0.8rem;
+  display: inline-block;
 }
 .badge-success { background: rgba(16, 185, 129, 0.2); color: var(--success-color); }
 .badge-danger  { background: rgba(239, 68, 68, 0.2);  color: var(--danger-color); }
+
+/* --- YENİ EKLENECEK KISIM (Skeleton Loader) --- */
+
+.skeleton-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding-top: 0.5rem;
+}
+
+.skeleton-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Başlık (Label) Yer tutucusu */
+.skeleton-label {
+  height: 14px;
+  width: 30%;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+/* Değer (Value) Yer tutucusu */
+.skeleton-value {
+  height: 22px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  /* Animasyon */
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* Genişlik yardımcı sınıfları */
+.w-25 { width: 25%; }
+.w-50 { width: 50%; }
+.w-75 { width: 75%; }
+
+/* Yanıp sönme animasyonu */
+@keyframes pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}

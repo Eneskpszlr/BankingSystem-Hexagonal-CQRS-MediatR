@@ -1,76 +1,85 @@
-<app-loader [isLoading]="isLoading"></app-loader>
-
-<div class="container fade-in">
+@if (isLoading) {
+  <app-loader [isLoading]="true"></app-loader>
+} @else {
   
-  <div class="page-header">
-    <h2 class="page-title">Hesap Hareketleri</h2>
-  </div>
-
-  <div class="filter-card">
-    <div class="form-group filter-input">
-      <label>İşlem Geçmişini Görüntülemek İçin Hesap Seçiniz:</label>
-      
-      <select [(ngModel)]="selectedAccountId" (change)="onAccountChange()">
-        <option [value]="0">-- Bir Hesap Seçiniz --</option>
-        @for (account of accounts; track account.id) {
-          <option [value]="account.id">
-            {{ account.id }} - {{ account.currencyCode }} ({{ account.balance | currency: account.currencyCode:'symbol-narrow' }})
-          </option>
-        }
-      </select>
+  <div class="container fade-in">
+    
+    <div class="page-header">
+      <h2 class="page-title">Hesap Hareketleri</h2>
     </div>
-  </div>
-
-  @if (selectedAccountId > 0) {
-    <div class="table-container fade-in">
-      <table>
-        <thead>
-          <tr>
-            <th>İşlem ID</th>
-            <th>Tarih</th>
-            <th>Açıklama</th>
-            <th>İşlem Tipi</th>
-            <th class="text-right">Tutar</th>
-          </tr>
-        </thead>
-        <tbody>
+  
+    <div class="filter-card">
+      <div class="form-group filter-input">
+        <label>İşlem Geçmişini Görüntülemek İçin Hesap Seçiniz:</label>
+        
+        <select [(ngModel)]="selectedAccountId" (change)="onAccountChange()">
+          <option [ngValue]="0">-- Bir Hesap Seçiniz --</option>
           
-          @for (tx of transactions; track tx.id) {
-            <tr>
-              <td>#{{ tx.id }}</td>
-              <td>{{ tx.createdDate | date:'dd.MM.yyyy HH:mm' }}</td>
-              <td>{{ tx.description }}</td>
-              <td>
-                <span class="badge" 
-                  [class.badge-success]="tx.transactionType === 'Deposit' || tx.transactionType === 'IncomingTransfer'"
-                  [class.badge-danger]="tx.transactionType === 'Withdraw' || tx.transactionType === 'OutgoingTransfer'">
-                  {{ tx.transactionType | statusTr }}
-                </span>
-              </td>
-              
-              <td class="text-right fw-600" 
-                  [class.text-success]="tx.transactionType === 'Deposit' || tx.transactionType === 'IncomingTransfer'"
-                  [class.text-danger]="tx.transactionType === 'Withdraw' || tx.transactionType === 'OutgoingTransfer'">
-                
-                {{ (tx.transactionType === 'Withdraw' || tx.transactionType === 'OutgoingTransfer' ? '-' : '+') }}
-                {{ tx.amount | currency: 'TRY':'symbol-narrow' }} 
-              </td>
-            </tr>
-          } @empty {
-            <tr>
-              <td colspan="5" class="empty-state">
-                Bu hesaba ait herhangi bir işlem bulunamadı.
-              </td>
-            </tr>
+          @for (account of accounts; track account.id) {
+            <option [ngValue]="account.id">
+              {{ account.firstName }} {{ account.lastName }} - {{ account.accountNumber || ('#'+account.id) }} 
+              ({{ account.balance | currency: (account.currencyCode || 'TRY'):'symbol-narrow' }})
+            </option>
           }
-
-        </tbody>
-      </table>
+        </select>
+      </div>
     </div>
-  } @else {
-    <div class="no-selection-state">
-      <p>🔍 İşlem geçmişini görmek için lütfen yukarıdan bir hesap seçiniz.</p>
-    </div>
-  }
+  
+    @if (selectedAccountId > 0) {
+      
+      <div class="table-container fade-in">
+        <table>
+          <thead>
+            <tr>
+              <th>İşlem ID</th>
+              <th>Tarih</th>
+              <th>Açıklama</th>
+              <th>İşlem Tipi</th>
+              <th class="text-right">Tutar</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            @for (tx of transactions; track tx.id) {
+              <tr>
+                <td><span class="badge badge-info">#{{ tx.id }}</span></td>
+                <td>{{ tx.createdDate | date:'dd.MM.yyyy HH:mm' }}</td>
+                <td>{{ tx.description }}</td>
+                <td>
+                  <span class="badge" 
+                    [class.badge-success]="tx.transactionType === 'Deposit' || tx.transactionType === 'IncomingTransfer'"
+                    [class.badge-danger]="tx.transactionType === 'Withdraw' || tx.transactionType === 'OutgoingTransfer'">
+                    {{ tx.transactionType | statusTr }}
+                  </span>
+                </td>
+                
+                <td class="text-right fw-600" 
+                    [class.text-success]="tx.transactionType === 'Deposit' || tx.transactionType === 'IncomingTransfer'"
+                    [class.text-danger]="tx.transactionType === 'Withdraw' || tx.transactionType === 'OutgoingTransfer'">
+                  
+                  {{ (tx.transactionType === 'Withdraw' || tx.transactionType === 'OutgoingTransfer' ? '-' : '+') }}
+                  
+                  {{ tx.amount | currency: currentCurrency :'symbol-narrow' }} 
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="5" class="empty-state">
+                  Bu hesaba ait herhangi bir işlem bulunamadı.
+                </td>
+              </tr>
+            }
+  
+          </tbody>
+        </table>
+      </div>
+  
+    } @else {
+      <div class="no-selection-state">
+        <p>🔍 İşlem geçmişini görmek için lütfen yukarıdan bir hesap seçiniz.</p>
+      </div>
+    }
+  
+  </div>
 
-</div>
+}

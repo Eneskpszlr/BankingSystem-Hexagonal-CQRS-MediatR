@@ -1,15 +1,16 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { finalize } from 'rxjs';
 import { TransactionService } from '../../services/transaction.service';
 import { AccountService } from '../../../accounts/services/account.service';
 import { Account } from '../../../../core/models/accounts';
 import { createTransactionForm, toTransactionRequest } from '../../validations/transaction.form';
 import { createTransferForm, toTransferRequest } from '../../validations/transfer.form';
 import { Loader } from '../../../../shared/components/loader/loader';
+import { NotificationService } from '../../../../core/services/notification';
 
-// İşlem Tipleri için Tip Tanımı
 type OperationType = 'Deposit' | 'Withdraw' | 'Transfer';
 
 @Component({
@@ -21,20 +22,18 @@ type OperationType = 'Deposit' | 'Withdraw' | 'Transfer';
 export class CreateTransaction implements OnInit {
   private _transactionService = inject(TransactionService);
   private _accountService = inject(AccountService);
+  private _notificationService = inject(NotificationService);
   private _router = inject(Router);
+  private cd = inject(ChangeDetectorRef);
 
-  accounts: Account[] = [];
+  accounts: any[] = [];
   isLoading = false;
   isSubmitting = false;
+  errorMessage = '';
 
-  // Seçili İşlem Tipi (Varsayılan: Para Yatırma)
   selectedOperation: OperationType = 'Deposit';
 
-  // İki Farklı Form Örneği (Factory Pattern)
-  // 1. Yatırma ve Çekme için Form
   simpleForm = createTransactionForm();
-  
-  // 2. Transfer için Form
   transferForm = createTransferForm();
 
   ngOnInit(): void {
@@ -43,29 +42,43 @@ export class CreateTransaction implements OnInit {
 
   loadAccounts() {
     this.isLoading = true;
-    this._accountService.getAll().subscribe({
-      next: (res) => {
-        this.accounts = res.data;
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Hesaplar yüklenemedi', err);
-        this.isLoading = false;
-      }
-    });
+    
+    this._accountService.getAll()
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+          this.cd.detectChanges();
+        })
+      )
+      .subscribe({
+        next: (res: any) => {
+          console.log('İşlem Sayfası İçin Hesaplar:', res);
+          
+          if (Array.isArray(res)) {
+             this.accounts = res;
+          } else if (res && res.data) {
+             this.accounts = res.data;
+          } else {
+             this.accounts = [];
+          }
+        },
+        error: (err) => {
+          console.error('Hesaplar yüklenemedi', err);
+          this._notificationService.error('Hesap listesi yüklenemedi.');
+        }
+      });
   }
 
-  // İşlem Tipi Değiştiğinde
   setOperation(type: OperationType) {
     this.selectedOperation = type;
+    this.errorMessage = '';
     
-    // Formları sıfırla
     this.simpleForm.reset({ currencyCode: 'TRY' });
     this.transferForm.reset({ currencyCode: 'TRY' });
   }
 
-  // Form Gönderme
   onSubmit() {
+    this.errorMessage = '';
     this.isSubmitting = true;
 
     if (this.selectedOperation === 'Transfer') {
@@ -75,7 +88,6 @@ export class CreateTransaction implements OnInit {
     }
   }
 
-  // A) Para Yatırma ve Çekme İşlemi
   private handleSimpleTransaction() {
     if (this.simpleForm.invalid) {
       this.simpleForm.markAllAsTouched();
@@ -89,13 +101,19 @@ export class CreateTransaction implements OnInit {
       ? this._transactionService.deposit(request) 
       : this._transactionService.withdraw(request);
 
-    request$.subscribe({
-      next: () => this.onSuccess(),
-      error: (err) => this.onError(err)
-    });
+    request$
+      .pipe(
+        finalize(() => {
+          this.isSubmitting = false;
+          this.cd.detectChanges();
+        })
+      )
+      .subscribe({
+        next: () => this.onSuccess(),
+        error: (err) => this.onError(err)
+      });
   }
 
-  // B) Havale İşlemi
   private handleTransfer() {
     if (this.transferForm.invalid) {
       this.transferForm.markAllAsTouched();
@@ -105,25 +123,43 @@ export class CreateTransaction implements OnInit {
 
     const request = toTransferRequest(this.transferForm);
 
-    this._transactionService.transfer(request).subscribe({
-      next: () => this.onSuccess(),
-      error: (err) => this.onError(err)
-    });
+    this._transactionService.transfer(request)
+      .pipe(
+        finalize(() => {
+          this.isSubmitting = false;
+          this.cd.detectChanges();
+        })
+      )
+      .subscribe({
+        next: () => this.onSuccess(),
+        error: (err) => this.onError(err)
+      });
   }
 
   private onSuccess() {
-    console.log('İşlem Başarılı');
-    this.isSubmitting = false;
-    this._router.navigate(['/transactions']); // Geçmiş sayfasına yönlendir
+    // Başarılı Mesajı
+    const msg = this.selectedOperation === 'Transfer' 
+      ? 'Transfer işlemi başarıyla gerçekleşti! 🚀' 
+      : 'İşlem başarıyla tamamlandı! 💸';
+      
+    this._notificationService.success(msg);
+    this._router.navigate(['/transactions']); 
   }
 
   private onError(err: any) {
     console.error('İşlem Hatası:', err);
-    this.isSubmitting = false;
-    // Toastr eklenecek
+    
+    if (err.status === 400) {
+      if (err.error?.errors) {
+        this.errorMessage = Object.values(err.error.errors).flat().join(', ');
+      } else {
+        this.errorMessage = err.error?.title || 'İşlem gerçekleştirilemedi.';
+      }
+    } else {
+      this.errorMessage = 'Beklenmedik bir hata oluştu.';
+    }
   }
 
-  // Helper: Hata kontrolü (Hangi formun aktif olduğuna bakar)
   hasError(controlName: string, errorName: string): boolean {
     const activeForm = this.selectedOperation === 'Transfer' ? this.transferForm : this.simpleForm;
     const control = (activeForm as FormGroup).get(controlName);

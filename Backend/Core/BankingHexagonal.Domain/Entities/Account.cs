@@ -142,7 +142,7 @@ namespace BankingHexagonal.Domain.Entities
         }
 
 
-        public void UpdateDetails(string newAccountNumber, int newBranchId)
+        public void UpdateDetails(string newAccountNumber, int newBranchId, DataStatus newStatus)
         {
             ValidateAccountIsActive();
 
@@ -155,7 +155,7 @@ namespace BankingHexagonal.Domain.Entities
 
             // Tarih ve Durum
             UpdatedDate = DateTime.UtcNow;
-            Status = DataStatus.Updated;
+            Status = newStatus;
         }
 
 

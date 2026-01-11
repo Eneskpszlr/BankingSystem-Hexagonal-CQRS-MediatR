@@ -14,20 +14,41 @@ export interface Toast {
 export class NotificationService {
   toasts = signal<Toast[]>([]);
 
-  show(message: string, type: ToastType = 'info') {
+  // 1. Başarı Mesajı
+  success(message: string) {
+    this.add(message, 'success');
+  }
+
+  // 2. Hata Mesajı
+  error(message: string) {
+    this.add(message, 'error');
+  }
+
+  // 3. Bilgi Mesajı
+  info(message: string) {
+    this.add(message, 'info');
+  }
+
+  // 4. Uyarı Mesajı
+  warning(message: string) {
+    this.add(message, 'warning');
+  }
+
+  // Toast Ekleme
+  private add(message: string, type: ToastType) {
     const id = Date.now();
     const newToast: Toast = { id, message, type };
 
     // Listeye ekle
-    this.toasts.update(list => [...list, newToast]);
+    this.toasts.update(current => [...current, newToast]);
 
-    // 3 saniye sonra otomatik sil
     setTimeout(() => {
       this.remove(id);
     }, 3000);
   }
 
+  // Toast Silme (Manuel kapatma veya süre dolunca)
   remove(id: number) {
-    this.toasts.update(list => list.filter(t => t.id !== id));
+    this.toasts.update(current => current.filter(t => t.id !== id));
   }
 }

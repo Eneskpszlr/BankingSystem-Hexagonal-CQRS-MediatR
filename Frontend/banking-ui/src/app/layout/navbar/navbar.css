@@ -16,6 +16,7 @@
   align-items: center;
   width: 100%;
   padding: 0 2rem;
+  position: relative; 
 }
 
 .nav-brand {
@@ -41,6 +42,9 @@
   font-size: 0.9rem;
   font-weight: 500;
   transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .nav-links a:hover {
@@ -79,7 +83,59 @@
   color: var(--text-main);
 }
 
-/* Mobil */
+/* Varsayılan olarak Hamburger Butonu gizli */
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-main);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* MOBİL GÖRÜNÜM*/
 @media (max-width: 768px) {
-  .nav-links { display: none; }
+  
+  /* Hamburger butonu görünsün */
+  .mobile-menu-btn {
+    display: block;
+    margin-right: 10px;
+  }
+
+  /* Profil ismini mobilde gizle, sadece avatar kalsın */
+  .username {
+    display: none;
+  }
+
+  /* Menü Linklerini Mobilde Düzenle */
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 64px;
+    left: 0;
+    width: 100%;
+    background-color: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Menü Açıkken */
+  .nav-links.open {
+    display: flex;
+    animation: slideDown 0.3s ease-out;
+  }
+
+  .nav-links a {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+  }
+}
+
+/* Menü açılma animasyonu */
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }

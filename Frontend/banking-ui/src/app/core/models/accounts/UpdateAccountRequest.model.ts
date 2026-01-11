@@ -1,5 +1,9 @@
 export interface UpdateAccountRequest {
     id: number;
     name?: string;
-    status?: string;
+    status?: number | string;
+    accountNumber?: string;
+    customerId?: number;
+    branchId?: number;
+    currencyCode?: string
 }

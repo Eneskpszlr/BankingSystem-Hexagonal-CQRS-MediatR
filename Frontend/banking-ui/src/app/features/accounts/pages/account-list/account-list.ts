@@ -1,31 +1,31 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { finalize } from 'rxjs';
 import { AccountService } from '../../services/account.service';
 import { Account } from '../../../../core/models/accounts';
-
-// Shared Bileşenler
 import { Loader } from '../../../../shared/components/loader/loader';
 import { ConfirmDialog } from '../../../../shared/components/confirm-dialog/confirm-dialog'; 
 import { StatusTrPipe } from '../../../../shared/pipes/status-tr-pipe';
 
 @Component({
   selector: 'app-account-list',
-  imports: [CommonModule, RouterLink, Loader, ConfirmDialog, Loader, StatusTrPipe],
+  imports: [CommonModule, RouterLink, Loader, ConfirmDialog, StatusTrPipe],
   templateUrl: './account-list.html',
   styleUrl: './account-list.css',
 })
-export class AccountList {
+export class AccountList implements OnInit {
   // Dependency Injection
   private _accountService = inject(AccountService);
+  private cd = inject(ChangeDetectorRef);
 
   // State (Veri Durumu)
   accounts: Account[] = [];
-  isLoading: boolean = false;
+  isLoading: boolean = true;
 
   // Dialog State (Silme Onayı İçin)
   isDeleteDialogOpen: boolean = false;
-  selectedAccountId: number | null = null; // Hangi hesabın silineceği
+  selectedAccountId: number | null = null; 
 
   ngOnInit(): void {
     this.loadAccounts();
@@ -35,18 +35,30 @@ export class AccountList {
   loadAccounts() {
     this.isLoading = true;
 
-    this._accountService.getAll().subscribe({
-      next: (response) => {
-        // Backend'den { success: true, data: [...] } geliyor
-        this.accounts = response.data; 
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Hata oluştu:', err);
-        this.isLoading = false;
-        // İleride buraya Toastr (Hata mesajı) ekleyeceğiz
-      }
-    });
+    this._accountService.getAll()
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+          this.cd.detectChanges();
+        })
+      )
+      .subscribe({
+        next: (response:any) => {
+          console.log('Backendden Gelen TÜM CEVAP:', response); 
+          if (Array.isArray(response)) {
+             this.accounts = response;
+          } 
+          else if (response && response.data) {
+             this.accounts = response.data;
+          } 
+          else {
+             this.accounts = [];
+          }
+        },
+        error: (err) => {
+          console.error('Hesaplar yüklenirken hata:', err);
+        }
+      });
   }
 
   // 2. Sil Butonuna Basınca (Dialogu Aç)
@@ -55,24 +67,28 @@ export class AccountList {
     this.isDeleteDialogOpen = true;
   }
 
-  // 3. Dialogda "Evet"e Basınca (Silme İşlemi)
+  // 3. Dialogda "Evet"e Basınca
   confirmDelete() {
     if (this.selectedAccountId) {
-      this.isLoading = true; // Yükleniyor aç
-      this.isDeleteDialogOpen = false; // Dialogu kapat
+      this.isLoading = true; 
+      this.isDeleteDialogOpen = false;
 
-      this._accountService.delete(this.selectedAccountId).subscribe({
-        next: () => {
-          // Listeden silineni frontend tarafında da çıkart (Tekrar istek atmaya gerek yok, performans!)
-          this.accounts = this.accounts.filter(a => a.id !== this.selectedAccountId);
-          this.isLoading = false;
-          this.selectedAccountId = null;
-        },
-        error: (err) => {
-          console.error('Silme hatası:', err);
-          this.isLoading = false;
-        }
-      });
+      this._accountService.delete(this.selectedAccountId)
+        .pipe(
+          finalize(() => {
+            this.isLoading = false;
+            this.cd.detectChanges();
+            this.selectedAccountId = null;
+          })
+        )
+        .subscribe({
+          next: () => {
+            this.accounts = this.accounts.filter(a => a.id !== this.selectedAccountId);
+          },
+          error: (err) => {
+            console.error('Silme hatası:', err);
+          }
+        });
     }
   }
 

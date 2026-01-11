@@ -38,10 +38,26 @@
 }
 
 /* Renkler (NotificationService'den gelen tiplere göre) */
-.success { background-color: rgba(16, 185, 129, 0.95); border-left: 5px solid #065f46; }
-.error   { background-color: rgba(239, 68, 68, 0.95); border-left: 5px solid #991b1b; }
-.info    { background-color: rgba(59, 130, 246, 0.95); border-left: 5px solid #1e3a8a; }
-.warning { background-color: rgba(245, 158, 11, 0.95); border-left: 5px solid #78350f; color: #fff; }
+.success { 
+    background-color: var(--success-color, rgba(16, 185, 129, 0.95)); 
+    border-left: 5px solid #065f46; 
+}
+
+.error { 
+    background-color: var(--danger-color, rgba(239, 68, 68, 0.95)); 
+    border-left: 5px solid #991b1b; 
+}
+
+.info { 
+    background-color: #3b82f6; 
+    border-left: 5px solid #1e3a8a; 
+}
+
+.warning { 
+    background-color: #f59e0b; 
+    border-left: 5px solid #78350f; 
+    color: #fff; 
+}
 
 @keyframes slideIn {
   from { transform: translateX(100%); opacity: 0; }

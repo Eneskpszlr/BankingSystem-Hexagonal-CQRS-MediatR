@@ -34,7 +34,8 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Read.Accounts
                 CurrencyCode = a.Balance.Currency,
 
                 BranchId = a.BranchId,
-                CustomerId = a.CustomerId
+                CustomerId = a.CustomerId,
+                Status = a.Status.ToString()
             }).ToList();
         }
     }

@@ -18,7 +18,11 @@ namespace BankingHexagonal.Application.UseCases.Accounts
             var account = await _repository.GetByIdAsync(command.Id);
             if (account == null) throw new Exception("Hesap bulunamadı.");
 
-            account.UpdateDetails(command.AccountNumber, command.BranchId);
+            account.UpdateDetails(
+            command.AccountNumber,
+            command.BranchId,
+            (BankingHexagonal.Domain.Enums.DataStatus)command.Status
+        );
 
             // Repoda Update çağırmaya gerek yok (Tracking açık).
             // _repository.Update(account);

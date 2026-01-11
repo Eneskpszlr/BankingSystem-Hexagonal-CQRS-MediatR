@@ -1,7 +1,7 @@
 
 export interface UpdateBranchRequest {
     id: number;
-    name: string;
+    branchName: string;
     street: string;
     city: string;
     country: string;

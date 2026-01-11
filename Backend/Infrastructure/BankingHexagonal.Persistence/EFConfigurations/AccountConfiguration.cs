@@ -20,6 +20,10 @@ namespace BankingHexagonal.Persistence.EFConfigurations
                 .IsRequired()
                 .HasMaxLength(20);
 
+            builder.Property(x => x.Status)
+               .IsRequired()
+               .HasConversion<int>();
+
             // --- VALUE OBJECT AYARI (MONEY) ---
             // Veritabanında ayrı tablo açmaz, Accounts tablosuna kolon olarak ekler.
             builder.OwnsOne(x => x.Balance, money =>

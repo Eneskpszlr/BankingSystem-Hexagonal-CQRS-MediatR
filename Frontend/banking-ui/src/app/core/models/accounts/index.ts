@@ -1,3 +1,3 @@
-export * from './account.model';
+export * from './Account.model';
 export * from './CreateAccountRequest.model';
-export * from './updateAccountRequest.model';
+export * from './UpdateAccountRequest.model';

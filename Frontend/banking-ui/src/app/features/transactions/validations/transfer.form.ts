@@ -2,6 +2,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TransferRequest } from '../../../core/models/transactions';
 import { CustomValidators } from '../../../shared/validators/custom-validators';
 
+// 1. Formun İçeriği
 export type TransferFormContent = {
   accountId: FormControl<number>;
   targetAccountId: FormControl<number>;
@@ -12,6 +13,7 @@ export type TransferFormContent = {
 
 export type TransferFormGroup = FormGroup<TransferFormContent>;
 
+// 2. Formu Oluşturan Fonksiyon
 export function createTransferForm(): TransferFormGroup {
   return new FormGroup<TransferFormContent>({
     accountId: new FormControl(0, { nonNullable: true, validators: [Validators.required, Validators.min(1)] }),
@@ -22,6 +24,15 @@ export function createTransferForm(): TransferFormGroup {
   });
 }
 
+// 3. Form Verisini Backend Modeline Dönüştüren Fonksiyon (Mapper)
 export function toTransferRequest(form: TransferFormGroup): TransferRequest {
-  return form.getRawValue();
+  const raw = form.getRawValue();
+
+  return {
+    fromAccountId: raw.accountId,
+    amount: raw.amount,
+    currencyCode: raw.currencyCode,
+    description: raw.description,
+    toAccountNumber: String(raw.targetAccountId) 
+  };
 }

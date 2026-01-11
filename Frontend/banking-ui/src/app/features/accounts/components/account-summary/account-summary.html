@@ -2,30 +2,50 @@
   <h3>Hesap Özeti</h3>
   
   @if (account) {
-    <div class="info-row">
-      <label>Hesap No</label>
-      <div class="info-value">#{{ account.id }}</div>
-    </div>
-
-    <div class="info-row">
-      <label>Müşteri</label>
-      <div class="info-value">{{ account.firstName }} {{ account.lastName }}</div>
-    </div>
-
-    <div class="info-row">
-      <label>Mevcut Bakiye</label>
-      <div class="info-value" [class.text-danger]="account.balance < 0">
-        {{ account.balance | currency: account.currencyCode :'symbol-narrow' }}
+    <div class="info-content fade-in">
+      
+      <div class="info-row">
+        <label>Hesap No</label>
+        <div class="info-value">#{{ account.id }}</div>
       </div>
+
+      <div class="info-row">
+        <label>Müşteri</label>
+        <div class="info-value">{{ account.firstName || '-' }} {{ account.lastName || '' }}</div>
+      </div>
+
+      <div class="info-row">
+        <label>Mevcut Bakiye</label>
+        <div class="info-value" [class.text-danger]="account.balance < 0">
+          {{ account.balance | currency: (account.currencyCode || 'TRY') :'symbol-narrow' }}
+        </div>
+      </div>
+      
+      <div class="info-row">
+        <label>Durum</label>
+        <span class="badge" 
+          [class.badge-success]="account.status === 'Active'" 
+          [class.badge-danger]="account.status === 'Passive'">
+          {{ account.status | statusTr }}
+        </span>
+      </div>
+
     </div>
-    
-    <div class="info-row">
-      <label>Durum</label>
-      <span class="badge" 
-        [class.badge-success]="account.status === 'Active'" 
-        [class.badge-danger]="account.status === 'Passive'">
-        {{ account.status | statusTr }}
-      </span>
+  } 
+  @else {
+    <div class="skeleton-wrapper">
+      <div class="skeleton-row">
+        <div class="skeleton-label"></div>
+        <div class="skeleton-value w-50"></div>
+      </div>
+      <div class="skeleton-row">
+        <div class="skeleton-label"></div>
+        <div class="skeleton-value w-75"></div>
+      </div>
+      <div class="skeleton-row">
+        <div class="skeleton-label"></div>
+        <div class="skeleton-value w-25"></div>
+      </div>
     </div>
   }
 </div>

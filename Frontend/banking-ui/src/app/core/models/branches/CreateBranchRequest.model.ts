@@ -1,8 +1,7 @@
-
 export interface CreateBranchRequest {
-    name: string;
-    code: string;
-    street: string;
+    branchName: string;
+    branchCode: string;
+    address: string;
     city: string;
     country: string;
     zipCode: string;
