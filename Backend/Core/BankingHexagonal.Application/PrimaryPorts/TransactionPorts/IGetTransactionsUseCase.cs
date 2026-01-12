@@ -9,6 +9,6 @@ namespace BankingHexagonal.Application.PrimaryPorts.TransactionPorts
 {
     public interface IGetTransactionsUseCase
     {
-        Task<List<Transaction>> ExecuteAsync();
+        Task<List<Transaction>> ExecuteAsync(int? accountId, DateTime? startDate, DateTime? endDate);
     }
 }

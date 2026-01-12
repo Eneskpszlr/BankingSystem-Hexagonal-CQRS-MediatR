@@ -17,9 +17,9 @@ namespace BankingHexagonal.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] GetTransactionsQuery query)
         {
-            var result = await _mediator.Send(new GetTransactionsQuery());
+            var result = await _mediator.Send(query);
             return Ok(result);
         }
 

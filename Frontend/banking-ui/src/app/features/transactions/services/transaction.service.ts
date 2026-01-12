@@ -5,6 +5,13 @@ import { Transaction, TransactionRequest, TransferRequest } from '../../../core/
 import { ApiResponse } from '../../../core/models/api-response.model';
 import { API_ENDPOINTS } from '../../../core/constants/api-endpoints';
 
+// Filtreleme için tip tanımı
+export interface TransactionFilter {
+  accountId?: number;
+  startDate?: string; // YYYY-MM-DD
+  endDate?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -12,8 +19,23 @@ export class TransactionService {
   
   private _http = inject(HttpClient);
 
-  getByAccountId(accountId: number): Observable<ApiResponse<Transaction[]>> {
-    const params = new HttpParams().set('accountId', accountId);
+  getAll(filter: TransactionFilter = {}): Observable<ApiResponse<Transaction[]>> {
+    let params = new HttpParams();
+
+    // 1. Hesap ID var mı?
+    if (filter.accountId) {
+      params = params.set('accountId', filter.accountId);
+    }
+
+    // 2. Başlangıç Tarihi var mı?
+    if (filter.startDate) {
+      params = params.set('startDate', filter.startDate);
+    }
+
+    // 3. Bitiş Tarihi var mı?
+    if (filter.endDate) {
+      params = params.set('endDate', filter.endDate);
+    }
 
     return this._http.get<ApiResponse<Transaction[]>>(API_ENDPOINTS.TRANSACTIONS.BASE, { params });
   }

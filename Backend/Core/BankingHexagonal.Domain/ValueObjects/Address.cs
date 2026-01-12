@@ -1,4 +1,6 @@
-﻿namespace BankingHexagonal.Domain.ValueObjects
+﻿using BankingHexagonal.Domain.Exceptions;
+
+namespace BankingHexagonal.Domain.ValueObjects
 {
     public class Address : ValueObject
     {
@@ -12,16 +14,19 @@
         public Address(string street, string city, string country, string zipCode)
         {
             // Validasyonlar burada yapılır! Entity temiz kalır.
-            if (string.IsNullOrWhiteSpace(street)) 
-                throw new Exception("Sokak bilgisi boş olamaz.");
-            if (string.IsNullOrWhiteSpace(city)) 
-                throw new Exception("Şehir bilgisi boş olamaz.");
+            if (string.IsNullOrWhiteSpace(street))
+                throw new DomainException("Sokak bilgisi boş olamaz.");
+
+            if (string.IsNullOrWhiteSpace(city))
+                throw new DomainException("Şehir bilgisi boş olamaz.");
 
             Street = street;
             City = city;
             Country = country;
             ZipCode = zipCode;
         }
+
+
 
         // Eşitlik kontrolü için hangi alanlara bakılacağını söylüyoruz
         protected override IEnumerable<object> GetEqualityComponents()

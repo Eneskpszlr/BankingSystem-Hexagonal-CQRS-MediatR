@@ -11,5 +11,7 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Queries.Transactions
     public class GetTransactionsQuery : IRequest<List<GetTransactionsQueryResult>>
     {
         public int? AccountId { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
     }
 }

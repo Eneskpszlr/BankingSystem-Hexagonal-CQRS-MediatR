@@ -11,9 +11,9 @@ namespace BankingHexagonal.Application.UseCases.Transactions
         {
             _repository = repository;
         }
-        public async Task<List<Transaction>> ExecuteAsync()
+        public async Task<List<Transaction>> ExecuteAsync(int? accountId, DateTime? startDate, DateTime? endDate)
         {
-            return await _repository.GetAllAsync(tracking: false);
+            return await _repository.GetFilteredAsync(accountId, startDate, endDate);
         }
     }
 }

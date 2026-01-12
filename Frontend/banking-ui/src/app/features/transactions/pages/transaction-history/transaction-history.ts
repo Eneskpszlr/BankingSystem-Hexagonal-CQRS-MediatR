@@ -31,11 +31,50 @@ export class TransactionHistory implements OnInit {
   // Tabloda göstermek için seçili hesabın para birimi
   currentCurrency: string = 'TRY'; 
 
+  startDate: string | null = null;
+  endDate: string | null = null;
+
   ngOnInit(): void {
     this.loadAccounts();
   }
 
-  // 1. Hesapları Getir (Sayfa Açılışı)
+  applyFilters() {
+    if (!this.selectedAccountId || this.selectedAccountId === 0) {
+      this.transactions = [];
+      return;
+    }
+
+    this.isLoading = true;
+    
+    this.cd.detectChanges();
+
+    const filters: any = {
+      accountId: this.selectedAccountId
+    };
+
+    if (this.startDate) filters.startDate = this.startDate;
+    if (this.endDate) filters.endDate = this.endDate;
+
+    this._transactionService.getAll(filters)
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+          this.cd.detectChanges();
+        })
+      )
+      .subscribe({
+        next: (res: any) => {
+          const data = res.data || res;
+          this.transactions = Array.isArray(data) ? data : [];
+        },
+        error: (err) => {
+          console.error('Filtreleme hatası:', err);
+          this.transactions = [];
+        }
+      });
+  }
+
+    // 1. Hesapları Getir (Sayfa Açılışı)
   loadAccounts() {
     this.isLoading = true;
     
@@ -48,8 +87,6 @@ export class TransactionHistory implements OnInit {
       )
       .subscribe({
         next: (res: any) => {
-          console.log('Dropdown İçin Gelen Hesaplar:', res);
-
           if (Array.isArray(res)) {
              this.accounts = res;
           } else if (res && res.data) {
@@ -64,30 +101,26 @@ export class TransactionHistory implements OnInit {
       });
   }
 
-  // 2. Dropdown Değişince
+  // 3. Temizle Butonu İçin
+  clearFilters() {
+    this.startDate = null;
+    this.endDate = null;
+    this.applyFilters();
+  }
+
   onAccountChange() {
-    const accId = Number(this.selectedAccountId);
-
-    if (accId > 0) {
-      // Seçilen hesabın para birimini bul (Tablo için)
-      const selectedAccount = this.accounts.find(acc => acc.id === accId);
-      
-      this.currentCurrency = selectedAccount?.currencyCode || 'TRY';
-
-      // İşlemleri getir
-      this.loadTransactions(accId);
-    } else {
-      // "Seçiniz"e dönerse tabloyu temizle
-      this.transactions = [];
-      this.currentCurrency = 'TRY';
-    }
+    // Hesap değişince para birimini güncelle
+    const acc = this.accounts.find(x => x.id === this.selectedAccountId);
+    this.currentCurrency = acc?.currencyCode || 'TRY';
+    
+    this.applyFilters();
   }
 
   // 3. İşlemleri Getir
   loadTransactions(accountId: number) {
     this.isLoading = true;
 
-    this._transactionService.getByAccountId(accountId)
+    this._transactionService.getAll({ accountId: accountId })
       .pipe(
         finalize(() => {
           this.isLoading = false;

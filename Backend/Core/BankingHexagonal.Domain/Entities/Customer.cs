@@ -1,5 +1,6 @@
 ﻿using BankingHexagonal.Domain.Entities.Base;
 using BankingHexagonal.Domain.Enums;
+using BankingHexagonal.Domain.Exceptions;
 using BankingHexagonal.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -16,27 +17,52 @@ namespace BankingHexagonal.Domain.Entities
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
         public string IdentityNumber { get; private set; }
+        public string CustomerNumber { get; private set; }
+        public DateTime BirthDate { get; private set; }
         public string Email { get; private set; }
         public string Phone { get; private set; }
         public Address Address { get; private set; }
+        public bool IsActive { get; private set; }
 
         private readonly List<Account> _accounts = new();
         public virtual IReadOnlyCollection<Account> Accounts => _accounts.AsReadOnly();
+
+        public Customer(string firstName, string lastName, string identityNumber, string customerNumber, DateTime birthDate, string email, string phone, Address address)
+        {
+            if (string.IsNullOrWhiteSpace(firstName)) throw new ArgumentException("Ad boş olamaz.");
+            if (string.IsNullOrWhiteSpace(lastName)) throw new ArgumentException("Soyad boş olamaz.");
+            if (string.IsNullOrWhiteSpace(identityNumber)) throw new ArgumentException("TCKN boş olamaz.");
+            if (string.IsNullOrWhiteSpace(customerNumber)) throw new ArgumentException("Müşteri No boş olamaz.");
+
+            FirstName = firstName;
+            LastName = lastName;
+            IdentityNumber = identityNumber;
+            CustomerNumber = customerNumber;
+            BirthDate = birthDate;
+            Email = email;
+            Phone = phone;
+            Address = address;
+
+            CreatedDate = DateTime.UtcNow;
+            IsActive = true;
+            Status = DataStatus.Inserted;
+        }
 
         protected Customer() { }
 
         public Customer(string firstName, string lastName, string identityNumber, string email, Address address, string phone)
         {
-            if (string.IsNullOrWhiteSpace(firstName)) 
-                throw new ArgumentException("Ad alanı boş olamaz.");
-            if (string.IsNullOrWhiteSpace(lastName)) 
-                throw new ArgumentException("Soyad alanı boş olamaz.");
-            if (string.IsNullOrWhiteSpace(identityNumber))
-                throw new ArgumentException("TCKN boş olamaz.");
-            if (string.IsNullOrWhiteSpace(email)) 
-                throw new ArgumentException("E-posta boş olamaz.");
-            if (string.IsNullOrWhiteSpace(phone)) 
-                throw new ArgumentException("Telefon boş olamaz.");
+            if (string.IsNullOrWhiteSpace(firstName))
+                throw new DomainException("Müşteri adı boş bırakılamaz.");
+
+            if (string.IsNullOrWhiteSpace(lastName))
+                throw new DomainException("Müşteri soyadı boş bırakılamaz.");
+
+            if (string.IsNullOrWhiteSpace(identityNumber) || identityNumber.Length != 11)
+                throw new DomainException("Geçersiz TCKN.");
+
+            if (address == null)
+                throw new DomainException("Adres bilgisi zorunludur.");
 
             // Address null gelirse hata fırlat
             if (address == null) throw new ArgumentNullException(nameof(address));

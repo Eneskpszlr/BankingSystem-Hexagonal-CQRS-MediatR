@@ -54,6 +54,11 @@ namespace Presentation.Middlewares
                     break;
 
                 // 2. DOMAIN HATALARI (Bankacılık Kuralları)
+                case DomainException domainEx:
+                    statusCode = HttpStatusCode.BadRequest;
+                    message = domainEx.Message;
+                    break;
+
                 case BaseException:
                     statusCode = HttpStatusCode.BadRequest;
                     message = ex.Message;

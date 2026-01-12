@@ -1,8 +1,10 @@
 ﻿using BankingHexagonal.Application.PrimaryPorts.AccountPorts;
+using BankingHexagonal.Application.PrimaryPorts.AuthPorts;
 using BankingHexagonal.Application.PrimaryPorts.BranchPorts;
 using BankingHexagonal.Application.PrimaryPorts.CustomerPorts;
 using BankingHexagonal.Application.PrimaryPorts.TransactionPorts;
 using BankingHexagonal.Application.UseCases.Accounts;
+using BankingHexagonal.Application.UseCases.AuthPorts;
 using BankingHexagonal.Application.UseCases.Branches;
 using BankingHexagonal.Application.UseCases.Customers;
 using BankingHexagonal.Application.UseCases.Transactions;
@@ -42,6 +44,9 @@ namespace BankingHexagonal.Application.DependencyResolvers
             services.AddScoped<IWithdrawUseCase, WithdrawTransactionUseCase>();
             services.AddScoped<ITransferUseCase, TransferTransactionUseCase>();
             services.AddScoped<IGetTransactionsUseCase, GetTransactionsUseCase>();
+
+            services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
+            services.AddScoped<ILoginUseCase, LoginUseCase>();
 
             return services;
 

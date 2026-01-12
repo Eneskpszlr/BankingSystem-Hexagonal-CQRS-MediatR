@@ -8,7 +8,6 @@ namespace BankingHexagonal.Domain.Exceptions
 {
     public abstract class BaseException : Exception
     {
-        // Temel Domain Hatası
         protected BaseException(string message) : base(message) { }
     }
 }

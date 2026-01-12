@@ -21,7 +21,7 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Read.Transactions
 
         public async Task<List<GetTransactionsQueryResult>> Handle(GetTransactionsQuery request, CancellationToken cancellationToken)
         {
-            var transactions = await _useCase.ExecuteAsync();
+            var transactions = await _useCase.ExecuteAsync(request.AccountId, request.StartDate, request.EndDate);
 
             return transactions.Select(t => new GetTransactionsQueryResult
             {
@@ -35,8 +35,7 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Read.Transactions
                 CurrencyCode = t.Amount.Currency,
                 ReferenceNumber = t.ReferenceNumber,
                 CreatedDate = t.CreatedDate
-            }).OrderByDescending(x => x.CreatedDate) // En yeni işlem en üstte görünsün
-              .ToList();
+            }).ToList();
         }
     }
 }

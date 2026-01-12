@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure\BankingHexagonal.Infrastructure\BankingHexagonal.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Presentation\BankingHexagonal.WebApi\BankingHexagonal.WebApi.csproj" />
   </ItemGroup>
 

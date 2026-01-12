@@ -1,20 +1,18 @@
-@if (isLoading) {
-  <app-loader [isLoading]="true"></app-loader>
-} @else {
+<app-loader [isLoading]="isLoading"></app-loader>
+
+<div class="container fade-in">
   
-  <div class="container fade-in">
-    
-    <div class="page-header">
-      <h2 class="page-title">Hesap Hareketleri</h2>
-    </div>
-  
-    <div class="filter-card">
-      <div class="form-group filter-input">
-        <label>İşlem Geçmişini Görüntülemek İçin Hesap Seçiniz:</label>
-        
-        <select [(ngModel)]="selectedAccountId" (change)="onAccountChange()">
+  <div class="page-header">
+    <h2 class="page-title">Hesap Hareketleri</h2>
+  </div>
+
+  <div class="filter-card">
+    <div class="filters-layout">
+      
+      <div class="form-group account-select">
+        <label>Hesap Seçiniz</label>
+        <select [(ngModel)]="selectedAccountId" (change)="onAccountChange()" [disabled]="isLoading">
           <option [ngValue]="0">-- Bir Hesap Seçiniz --</option>
-          
           @for (account of accounts; track account.id) {
             <option [ngValue]="account.id">
               {{ account.firstName }} {{ account.lastName }} - {{ account.accountNumber || ('#'+account.id) }} 
@@ -23,12 +21,31 @@
           }
         </select>
       </div>
+
+      <div class="form-group date-input">
+        <label>Başlangıç Tarihi</label>
+        <input type="date" [(ngModel)]="startDate" (change)="applyFilters()" [disabled]="isLoading">
+      </div>
+
+      <div class="form-group date-input">
+        <label>Bitiş Tarihi</label>
+        <input type="date" [(ngModel)]="endDate" (change)="applyFilters()" [disabled]="isLoading">
+      </div>
+
+      <div class="form-group action-btn">
+        <label class="invisible-label">&nbsp;</label> 
+        <button class="btn-clear" (click)="clearFilters()" [disabled]="isLoading">
+            🧹 Temizle
+        </button>
+      </div>
+
     </div>
-  
-    @if (selectedAccountId > 0) {
-      
-      <div class="table-container fade-in">
-        <table>
+  </div>
+
+  @if (selectedAccountId > 0) {
+    
+    <div class="table-container fade-in">
+      <table>
           <thead>
             <tr>
               <th>İşlem ID</th>
@@ -39,7 +56,6 @@
             </tr>
           </thead>
           <tbody>
-            
             @for (tx of transactions; track tx.id) {
               <tr>
                 <td><span class="badge badge-info">#{{ tx.id }}</span></td>
@@ -52,34 +68,26 @@
                     {{ tx.transactionType | statusTr }}
                   </span>
                 </td>
-                
                 <td class="text-right fw-600" 
                     [class.text-success]="tx.transactionType === 'Deposit' || tx.transactionType === 'IncomingTransfer'"
                     [class.text-danger]="tx.transactionType === 'Withdraw' || tx.transactionType === 'OutgoingTransfer'">
-                  
                   {{ (tx.transactionType === 'Withdraw' || tx.transactionType === 'OutgoingTransfer' ? '-' : '+') }}
-                  
                   {{ tx.amount | currency: currentCurrency :'symbol-narrow' }} 
                 </td>
               </tr>
             } @empty {
               <tr>
-                <td colspan="5" class="empty-state">
-                  Bu hesaba ait herhangi bir işlem bulunamadı.
-                </td>
+                <td colspan="5" class="empty-state">Kayıt bulunamadı.</td>
               </tr>
             }
-  
           </tbody>
         </table>
-      </div>
-  
-    } @else {
-      <div class="no-selection-state">
-        <p>🔍 İşlem geçmişini görmek için lütfen yukarıdan bir hesap seçiniz.</p>
-      </div>
-    }
-  
-  </div>
+    </div>
 
-}
+  } @else {
+    <div class="no-selection-state">
+      <p>🔍 İşlem geçmişini görmek için lütfen yukarıdan bir hesap seçiniz.</p>
+    </div>
+  }
+
+</div>

@@ -35,6 +35,7 @@ namespace BankingHexagonal.Persistence.ServiceRegistration
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<ITransactionRepository, TransactionRepository>();
             services.AddScoped<IBranchRepository, BranchRepository>();
+            services.AddScoped<IAuthRepository, AuthRepository>();
 
             // 4. UnitOfWork
             services.AddScoped<IUnitOfWork, UnitOfWork>();
