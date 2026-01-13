@@ -1,4 +1,5 @@
-﻿using BankingHexagonal.Domain.Entities;
+﻿using BankingHexagonal.Application.CqrsAndMediatr.Queries.Transactions;
+using BankingHexagonal.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace BankingHexagonal.Application.PrimaryPorts.TransactionPorts
 {
     public interface IGetTransactionsUseCase
     {
-        Task<List<Transaction>> ExecuteAsync(int? accountId, DateTime? startDate, DateTime? endDate);
+        Task<List<Transaction>> ExecuteAsync(GetTransactionsQuery query);
     }
 }

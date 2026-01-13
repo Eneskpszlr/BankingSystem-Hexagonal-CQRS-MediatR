@@ -7,9 +7,13 @@ namespace BankingHexagonal.Persistence.EFRepositories
 {
     public class TransactionRepository(MyContext context) : BaseRepository<Transaction>(context), ITransactionRepository
     {
-        public async Task<List<Transaction>> GetFilteredAsync(int? accountId, DateTime? startDate, DateTime? endDate)
+        public async Task<List<Transaction>> GetFilteredAsync(int userId, int? accountId, DateTime? startDate, DateTime? endDate)
         {
-            var query = _context.Transactions.AsQueryable();
+            var query = _context.Transactions
+                .Include(t => t.Account)
+                .AsQueryable();
+
+            query = query.Where(t => t.Account.CustomerId == userId);
 
             // 1. Hesap Filtresi (Varsa)
             if (accountId.HasValue && accountId.Value > 0)

@@ -6,5 +6,6 @@ namespace BankingHexagonal.Domain.SecondaryPorts
     {
         Task<Account?> GetByIdWithDetailsAsync(int id);
         Task<Account?> GetByAccountNumberAsync(string accountNumber);
+        Task<List<Account>> GetByCustomerIdAsync(int customerId);
     }
 }

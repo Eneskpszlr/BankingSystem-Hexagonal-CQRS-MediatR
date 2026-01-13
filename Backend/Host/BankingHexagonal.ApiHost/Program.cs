@@ -2,6 +2,7 @@ using BankingHexagonal.Application.CqrsAndMediatr.Commands.Accounts;
 using BankingHexagonal.Application.DependencyResolvers;
 using BankingHexagonal.Application.PrimaryPorts.AuthPorts;
 using BankingHexagonal.Domain.Entities;
+using BankingHexagonal.Infrastructure.DependencyResolvers;
 using BankingHexagonal.Infrastructure.Services;
 using BankingHexagonal.Persistence.EFData;
 using BankingHexagonal.Persistence.ServiceRegistration;
@@ -64,7 +65,7 @@ namespace BankingHexagonal.ApiHost
             {
                 cfg.RegisterServicesFromAssembly(typeof(CreateAccountCommand).Assembly);
             });
-
+            builder.Services.AddInfrastructureServices();
             builder.Services.AddApplicationServices();
 
             builder.Services.AddControllers();

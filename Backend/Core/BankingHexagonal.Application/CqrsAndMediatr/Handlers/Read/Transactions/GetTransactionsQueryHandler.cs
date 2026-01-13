@@ -21,7 +21,7 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Read.Transactions
 
         public async Task<List<GetTransactionsQueryResult>> Handle(GetTransactionsQuery request, CancellationToken cancellationToken)
         {
-            var transactions = await _useCase.ExecuteAsync(request.AccountId, request.StartDate, request.EndDate);
+            var transactions = await _useCase.ExecuteAsync(request);
 
             return transactions.Select(t => new GetTransactionsQueryResult
             {

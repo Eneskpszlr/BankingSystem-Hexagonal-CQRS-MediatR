@@ -1,5 +1,6 @@
 ﻿using BankingHexagonal.Application.PrimaryPorts.CustomerPorts;
 using BankingHexagonal.Domain.Entities;
+using BankingHexagonal.Domain.Exceptions;
 using BankingHexagonal.Domain.SecondaryPorts;
 
 namespace BankingHexagonal.Application.UseCases.Customers
@@ -11,10 +12,17 @@ namespace BankingHexagonal.Application.UseCases.Customers
         {
             _repository = repository;
         }
-        public async Task<Customer> ExecuteAsync(int id)
+        public async Task<Customer> ExecuteAsync(int requestedId, int currentUserId, bool isAdmin)
         {
+
+            if (!isAdmin && requestedId != currentUserId)
+            {
+                throw new DomainException("Sadece kendi profilinizi görüntüleyebilirsiniz.");
+            }
+
             var customer = await _repository.GetByIdAsync(id);
-            if (customer == null) throw new Exception("Customer bulunamadı");
+            if (customer == null) 
+                throw new DomainException("Customer bulunamadı");
             return customer;
         }
     }

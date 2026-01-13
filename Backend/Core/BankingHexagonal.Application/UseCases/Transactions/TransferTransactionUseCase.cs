@@ -2,6 +2,7 @@
 using BankingHexagonal.Application.PrimaryPorts.TransactionPorts;
 using BankingHexagonal.Domain.Entities;
 using BankingHexagonal.Domain.Enums;
+using BankingHexagonal.Domain.Exceptions;
 using BankingHexagonal.Domain.SecondaryPorts;
 using BankingHexagonal.Domain.ValueObjects;
 
@@ -24,14 +25,19 @@ namespace BankingHexagonal.Application.UseCases.Transactions
             var toAccount = await _accountRepository.GetByAccountNumberAsync(command.ToAccountNumber);
 
             if (fromAccount == null)
-                throw new Exception("Gönderen hesap bulunamadı.");
+                throw new DomainException("Gönderen hesap bulunamadı.");
 
             if (toAccount == null)
-                throw new Exception("Alıcı hesap numarası hatalı.");
+                throw new DomainException("Alıcı hesap numarası hatalı.");
 
             if (fromAccount.Id == toAccount.Id)
             {
-                throw new Exception("Kendi hesabınıza transfer yapamazsınız.");
+                throw new DomainException("Kendi hesabınıza transfer yapamazsınız.");
+            }
+
+            if (fromAccount.CustomerId != command.UserId)
+            {
+                throw new DomainException("Sadece kendinize ait hesaplardan transfer yapabilirsiniz.");
             }
 
             var money = new Money(command.Amount, command.CurrencyCode);

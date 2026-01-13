@@ -1,12 +1,14 @@
 ﻿using BankingHexagonal.Application.CqrsAndMediatr.Commands.Customers;
 using BankingHexagonal.Application.CqrsAndMediatr.Queries.Customers;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankingHexagonal.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CustomersController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -17,13 +19,26 @@ namespace BankingHexagonal.WebApi.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAll()
         {
             var result = await _mediator.Send(new GetCustomersQuery());
             return Ok(result);
         }
 
+        [HttpGet("profile")]
+        [Authorize]
+        public async Task<IActionResult> GetMyProfile()
+        {
+            // ID'yi dışarıdan istemiyoruz, Token'dan alıyoruz.
+            int myCustomerId = GetCurrentCustomerId();
+
+            var result = await _mediator.Send(new GetCustomerByIdQuery(myCustomerId));
+            return Ok(result);
+        }
+
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetById(int id)
         {
             var result = await _mediator.Send(new GetCustomerByIdQuery(id));
@@ -33,6 +48,7 @@ namespace BankingHexagonal.WebApi.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] CreateCustomerCommand command)
         {
             var result = await _mediator.Send(command);
@@ -55,6 +71,7 @@ namespace BankingHexagonal.WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _mediator.Send(new RemoveCustomerCommand { Id = id });

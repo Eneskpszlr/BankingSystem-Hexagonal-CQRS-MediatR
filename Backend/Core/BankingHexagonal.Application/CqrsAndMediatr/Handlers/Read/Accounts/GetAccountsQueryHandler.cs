@@ -22,7 +22,7 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Read.Accounts
 
         public async Task<List<GetAccountsQueryResult>> Handle(GetAccountsQuery request, CancellationToken cancellationToken)
         {
-            var accounts = await _useCase.ExecuteAsync();
+            var accounts = await _useCase.ExecuteAsync(request.UserId, request.IsAdmin);
 
             return accounts.Select(a => new GetAccountsQueryResult
             {

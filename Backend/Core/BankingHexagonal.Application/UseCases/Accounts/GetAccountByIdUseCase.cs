@@ -1,5 +1,6 @@
 ﻿using BankingHexagonal.Application.PrimaryPorts.AccountPorts;
 using BankingHexagonal.Domain.Entities;
+using BankingHexagonal.Domain.Exceptions;
 using BankingHexagonal.Domain.SecondaryPorts;
 
 namespace BankingHexagonal.Application.UseCases.Accounts
@@ -11,10 +12,16 @@ namespace BankingHexagonal.Application.UseCases.Accounts
         {
             _repository = repository;
         }
-        public async Task<Account> ExecuteAsync(int id)
+        public async Task<Account> ExecuteAsync(int id, int userId)
         {
             var account = await _repository.GetByIdAsync(id);
-            if (account == null) throw new Exception("Hesap bulunamadı.");
+            if (account == null)
+                throw new DomainException("Hesap bulunamadı.");
+
+            if (account.CustomerId != userId)
+            {
+                throw new DomainException("Hesap bulunamadı.");
+            }
             return account;
         }
     }

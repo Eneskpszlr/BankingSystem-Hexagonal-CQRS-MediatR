@@ -14,7 +14,7 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Read.Accounts
         }
         public async Task<GetAccountByIdQueryResult> Handle(GetAccountByIdQuery request, CancellationToken cancellationToken)
         {
-            var account = await _useCase.ExecuteAsync(request.Id);
+            var account = await _useCase.ExecuteAsync(request.Id, request.UserId);
 
             return new GetAccountByIdQueryResult
             {

@@ -10,5 +10,7 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Queries.Accounts
 {
     public class GetAccountsQuery : IRequest<List<GetAccountsQueryResult>>
     {
+        public int UserId { get; set; }
+        public bool IsAdmin { get; set; }
     }
 }

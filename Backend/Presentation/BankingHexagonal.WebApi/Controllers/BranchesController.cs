@@ -1,12 +1,15 @@
 ﻿using BankingHexagonal.Application.CqrsAndMediatr.Commands.Branches;
 using BankingHexagonal.Application.CqrsAndMediatr.Queries.Branches;
+using BankingHexagonal.Application.CqrsAndMediatr.Queries.Customers;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankingHexagonal.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class BranchesController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -33,6 +36,7 @@ namespace BankingHexagonal.WebApi.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] CreateBranchCommand command)
         {
             var result = await _mediator.Send(command);
@@ -44,6 +48,7 @@ namespace BankingHexagonal.WebApi.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update([FromBody] UpdateBranchCommand command)
         {
             var result = await _mediator.Send(command);
@@ -55,6 +60,7 @@ namespace BankingHexagonal.WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _mediator.Send(new RemoveBranchCommand { Id = id });

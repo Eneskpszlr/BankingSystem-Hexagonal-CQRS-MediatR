@@ -21,5 +21,14 @@ namespace BankingHexagonal.Persistence.EFRepositories
             return await _context.Accounts
                 .FirstOrDefaultAsync(x => x.AccountNumber == accountNumber);
         }
+
+        public async Task<List<Account>> GetByCustomerIdAsync(int customerId)
+        {
+            return await _context.Accounts
+                .Where(a => a.CustomerId == customerId)
+                .Include(a => a.Customer)
+                .OrderByDescending(a => a.CreatedDate)
+                .ToListAsync();
+        }
     }
 }

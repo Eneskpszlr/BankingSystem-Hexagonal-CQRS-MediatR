@@ -4,6 +4,6 @@ namespace BankingHexagonal.Domain.SecondaryPorts
 {
     public interface ITransactionRepository : IRepository<Transaction>
     {
-        Task<List<Transaction>> GetFilteredAsync(int? accountId, DateTime? startDate, DateTime? endDate);
+        Task<List<Transaction>> GetFilteredAsync(int userId, int? accountId, DateTime? startDate, DateTime? endDate);
     }
 }

@@ -4,6 +4,6 @@ namespace BankingHexagonal.Application.PrimaryPorts.TransactionPorts
 {
     public interface IGetTransactionByIdUseCase
     {
-        Task<Transaction> ExecuteAsync(int transactionId);
+        Task<Transaction> ExecuteAsync(int transactionId, int userId);
     }
 }

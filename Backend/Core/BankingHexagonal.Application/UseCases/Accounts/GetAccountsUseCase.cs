@@ -11,9 +11,18 @@ namespace BankingHexagonal.Application.UseCases.Accounts
         {
             _repository = repository;
         }
-        public async Task<List<Account>> ExecuteAsync()
+        public async Task<List<Account>> ExecuteAsync(int userId, bool isAdmin)
         {
-            return await _repository.GetAllAsync(tracking: false);
+            if (isAdmin)
+            {
+                // Admin hepsini görebilir
+                return await _repository.GetAllAsync(tracking: false);
+            }
+            else
+            {
+                // Müşteri sadece kendi cüzdanını görür
+                return await _repository.GetByCustomerIdAsync(userId);
+            }
         }
     }
 }

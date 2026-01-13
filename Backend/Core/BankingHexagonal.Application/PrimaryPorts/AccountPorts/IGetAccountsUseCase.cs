@@ -4,6 +4,6 @@ namespace BankingHexagonal.Application.PrimaryPorts.AccountPorts
 {
     public interface IGetAccountsUseCase
     {
-        Task<List<Account>> ExecuteAsync();
+        Task<List<Account>> ExecuteAsync(int userId, bool isAdmin);
     }
 }
