@@ -1,0 +1,71 @@
+@if (isSubmitting) {
+  <app-loader [isLoading]="true"></app-loader>
+} @else {
+
+  <div class="container fade-in">
+    
+    <div class="page-header">
+      <h2 class="page-title">Yeni Hesap Oluştur</h2>
+    </div>
+
+    <div class="form-card">
+      
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        
+        <div class="form-grid-2-col">
+          <div class="form-group">
+            <label>Müşteri ID</label>
+            <input type="number" formControlName="customerId" placeholder="Örn: 101">
+            
+            @if (hasError('customerId', 'required')) {
+              <div class="error-message">Müşteri seçimi zorunludur.</div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label>Şube ID</label>
+            <input type="number" formControlName="branchId" placeholder="Örn: 1">
+            
+            @if (hasError('branchId', 'required')) {
+              <div class="error-message">Şube seçimi zorunludur.</div>
+            }
+          </div>
+        </div>
+
+        <div class="form-grid-2-col">
+          <div class="form-group">
+            <label>Başlangıç Bakiyesi</label>
+            <input type="number" formControlName="initialBalance" placeholder="0.00">
+            
+            @if (hasError('initialBalance', 'required')) {
+              <div class="error-message">Bakiye zorunludur.</div>
+            }
+             </div>
+
+          <div class="form-group">
+            <label>Para Birimi</label>
+            <select formControlName="currencyCode">
+              <option value="TRY">Türk Lirası (TRY)</option>
+              <option value="USD">Amerikan Doları (USD)</option>
+              <option value="EUR">Euro (EUR)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-info-note">
+          ℹ️ Hesap numarası sistem tarafından otomatik oluşturulacaktır.
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">Hesabı Oluştur</button>
+          
+          <a routerLink="/accounts" class="btn btn-secondary">
+            Vazgeç
+          </a>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+}

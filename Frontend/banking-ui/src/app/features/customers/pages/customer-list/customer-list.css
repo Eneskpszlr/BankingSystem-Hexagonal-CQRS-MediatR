@@ -1,0 +1,39 @@
+/* --- YARDIMCI SINIFLAR --- */
+.text-right {
+  text-align: right;
+}
+
+.fw-500 {
+  font-weight: 500;
+}
+
+.empty-state {
+  text-align: center; 
+  padding: 2rem; 
+  color: #94a3b8;
+}
+
+/* --- İLETİŞİM HÜCRESİ STİLLERİ --- */
+.email-text {
+  font-size: 0.85rem;
+}
+
+.phone-text {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* --- BUTONLAR --- */
+.actions-cell a {
+  margin-right: 5px;
+}
+
+/* --- ANİMASYON --- */
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

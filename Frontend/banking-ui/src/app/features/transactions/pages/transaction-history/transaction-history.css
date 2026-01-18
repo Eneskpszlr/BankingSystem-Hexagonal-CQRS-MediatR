@@ -1,0 +1,270 @@
+/* --- GENEL SAYFA DÜZENİ --- */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: 3rem;
+}
+
+.page-header {
+  margin-bottom: 1.5rem;
+  padding-left: 0.5rem;
+  border-left: 4px solid var(--primary-color, #3b82f6);
+}
+
+.page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #f1f5f9; /* 🔥 Beyaz (Slate-100) */
+  margin: 0;
+}
+
+/* --- FİLTRE KARTI (DARK THEME) --- */
+.filter-card {
+  background: #1e293b; /* 🔥 Koyu Lacivert (Slate-800) */
+  padding: 1.5rem;
+  border-radius: 16px;
+  border: 1px solid #334155; /* 🔥 Silik Çerçeve */
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); /* Daha koyu gölge */
+}
+
+.filters-layout {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+/* --- INPUT VE SELECT GRUPLARI --- */
+.form-group {
+  position: relative;
+  margin-bottom: 0;
+}
+
+.account-select {
+  flex: 2;
+  min-width: 280px;
+}
+
+.date-input {
+  flex: 1;
+  min-width: 160px;
+}
+
+.action-btn {
+  flex: 0 0 auto;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #94a3b8; /* 🔥 Gri Etiketler (Slate-400) */
+  margin-bottom: 0.4rem;
+  margin-left: 2px;
+}
+
+/* --- INPUT STİLLERİ (DARK MODE) --- */
+.form-group select,
+.form-group input {
+  width: 100%;
+  height: 48px;
+  padding: 0 1rem;
+  border: 1px solid #334155; /* Çerçeve rengi koyu */
+  border-radius: 10px;
+  background-color: #0f172a; /* 🔥 Daha koyu iç arka plan (Slate-900) */
+  color: #e2e8f0; /* 🔥 Yazı rengi açık gri (Slate-200) */
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+/* Takvim ikonu rengini beyaza çevir (Chrome/Edge için) */
+.form-group input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 0.6;
+    cursor: pointer;
+}
+
+.form-group select:focus,
+.form-group input:focus {
+  background-color: #0f172a;
+  border-color: #3b82f6; /* Mavi focus rengi */
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+.form-group input:disabled,
+.form-group select:disabled {
+  background-color: #1e293b;
+  color: #64748b;
+  cursor: not-allowed;
+}
+
+/* --- TEMİZLE BUTONU (DARK) --- */
+.btn-clear {
+  height: 48px;
+  padding: 0 1.5rem;
+  background-color: #334155; /* Koyu gri buton */
+  border: 1px solid #475569;
+  border-radius: 10px;
+  color: #e2e8f0; /* Açık yazı */
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+}
+
+.btn-clear:hover {
+  background-color: #475569; /* Hover olunca açıl */
+  color: #ffffff;
+}
+
+/* --- TABLO ALANI (DARK THEME) --- */
+.table-container {
+  background: #1e293b; /* 🔥 Kart ile aynı koyu renk */
+  border-radius: 16px;
+  border: 1px solid #334155;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  white-space: nowrap;
+}
+
+/* Tablo Başlıkları */
+thead {
+  background-color: #0f172a; /* 🔥 Başlık daha koyu (Slate-900) */
+  border-bottom: 1px solid #334155;
+}
+
+th {
+  padding: 1.25rem 1.5rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8; /* Muted Text */
+}
+
+/* Tablo Satırları */
+td {
+  padding: 1.25rem 1.5rem;
+  color: #e2e8f0; /* 🔥 Ana metin açık renk */
+  font-size: 0.95rem;
+  border-bottom: 1px solid #334155; /* Satır çizgileri silik */
+  vertical-align: middle;
+}
+
+/* Satır Hover Efekti */
+tbody tr:hover {
+  background-color: #28364d; /* 🔥 Hover olunca hafif aydınlan */
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* --- DURUM BADGE'LERİ (Koyu Temaya Uygun) --- */
+.badge {
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.025em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ID Badge: Şeffaf mavi arka plan */
+.badge-info { 
+  background-color: rgba(56, 189, 248, 0.15); 
+  color: #38bdf8; /* Açık mavi */
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  font-family: monospace;
+  font-size: 0.85rem;
+}
+
+/* Success Badge: Şeffaf yeşil */
+.badge-success { 
+  background-color: rgba(34, 197, 94, 0.15); 
+  color: #4ade80; /* Parlak yeşil */
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+/* Danger Badge: Şeffaf kırmızı */
+.badge-danger { 
+  background-color: rgba(239, 68, 68, 0.15); 
+  color: #f87171; /* Parlak kırmızı */
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+/* --- TUTAR KOLONU --- */
+.text-right {
+  text-align: right;
+}
+
+.fw-600 {
+  font-weight: 600;
+  font-feature-settings: "tnum";
+}
+
+.text-success { color: #4ade80; } /* Koyu temada parlak yeşil */
+.text-danger { color: #f87171; }  /* Koyu temada parlak kırmızı */
+
+/* --- EMPTY STATES --- */
+.no-selection-state, .empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #94a3b8;
+  background-color: #1e293b;
+  border-radius: 12px;
+  border: 2px dashed #334155;
+  font-size: 1rem;
+}
+
+.empty-state {
+  border: none;
+  background: transparent;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+  .filters-layout {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .account-select, .date-input, .action-btn {
+    width: 100%;
+  }
+  
+  .invisible-label {
+    display: none;
+  }
+
+  .btn-clear {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* --- ANIMATION --- */
+.fade-in {
+  animation: slideUpFade 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

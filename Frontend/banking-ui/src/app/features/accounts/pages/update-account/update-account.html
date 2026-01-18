@@ -1,0 +1,76 @@
+<app-loader [isLoading]="isLoading || isSubmitting"></app-loader>
+
+@if (!isLoading) {
+  <div class="container fade-in">
+    
+    <div class="page-header">
+      <h2 class="page-title">Hesap Düzenle</h2>
+    </div>
+
+    @if (currentAccountInfo) {
+      <div class="layout-grid">
+        
+        <div class="card-panel info-card">
+          <h3>Hesap Bilgileri</h3>
+          
+          <div class="info-row">
+            <label>Hesap Numarası</label>
+            <div class="info-value">
+              {{ currentAccountInfo.accountNumber || ('#' + currentAccountInfo.id) }}
+            </div>
+          </div>
+
+          <div class="info-row">
+            <label>Müşteri</label>
+            <div class="info-value">
+              {{ currentAccountInfo.firstName }} {{ currentAccountInfo.lastName }}
+            </div>
+          </div>
+
+          <div class="info-row">
+            <label>Mevcut Bakiye</label>
+            <div class="info-value" [class.text-danger]="currentAccountInfo.balance < 0">
+              {{ currentAccountInfo.balance | currency: (currentAccountInfo.currencyCode || 'TRY') :'symbol-narrow' }}
+            </div>
+          </div>
+
+          <div class="info-alert">
+            ℹ️ Bakiye, Müşteri ve Para Birimi güvenlik gereği buradan değiştirilemez.
+          </div>
+        </div>
+
+        <div class="card-panel form-card">
+          <h3>Durum Değişikliği</h3>
+          
+          <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            
+            <div class="form-group">
+              <label>Hesap Durumu</label>
+              <select formControlName="status">
+                <option value="1">Aktif</option>
+                <option value="3">Pasif (Hesabı Dondur)</option>
+              </select>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+                {{ isSubmitting ? 'Güncelleniyor...' : 'Durumu Güncelle' }}
+              </button>
+              
+              <a routerLink="/accounts" class="btn btn-secondary">
+                İptal
+              </a>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+    }
+    @else {
+      <div class="alert alert-warning">
+        Hesap bilgileri görüntülenemedi.
+      </div>
+    }
+  </div>
+}

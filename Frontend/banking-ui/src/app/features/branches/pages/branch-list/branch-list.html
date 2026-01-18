@@ -1,0 +1,64 @@
+<app-confirm-dialog 
+  [isOpen]="isDeleteDialogOpen" 
+  title="Şubeyi Sil" 
+  message="Bu şubeyi silmek üzeresiniz. İşlem geri alınamaz."
+  (confirm)="confirmDelete()" 
+  (cancel)="cancelDelete()">
+</app-confirm-dialog>
+
+@if (isLoading) {
+  <app-loader [isLoading]="true"></app-loader>
+} @else {
+  
+  <div class="container fade-in">
+    <div class="page-header">
+      <h2 class="page-title">Şube Yönetimi</h2>
+      <a routerLink="/branches/create" class="btn btn-primary">
+        <span>+</span> Yeni Şube
+      </a>
+    </div>
+  
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Şube Adı</th>
+            <th>Şube Kodu</th>
+            <th>Lokasyon</th>
+            <th class="text-right">İşlemler</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          @for (branch of branches; track branch.id) {
+            <tr>
+              <td>#{{ branch.id }}</td>
+              <td class="fw-500">{{ branch.branchName }}</td>
+              <td>
+                <span class="badge badge-info">{{ branch.branchCode }}</span>
+              </td>
+              <td>{{ branch.city }} / {{ branch.country }}</td>
+              <td class="text-right actions-cell">
+                <a [routerLink]="['/branches/update', branch.id]" class="btn btn-sm btn-secondary">
+                  Düzenle
+                </a>
+                <button class="btn btn-sm btn-danger" (click)="onDeleteClick(branch.id)">
+                  Sil
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5" class="empty-state">
+                Kayıtlı şube bulunamadı.
+              </td>
+            </tr>
+          }
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+}

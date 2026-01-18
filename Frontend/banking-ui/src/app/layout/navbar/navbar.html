@@ -1,0 +1,54 @@
+<nav class="navbar">
+  <div class="container navbar-content">
+    
+    <a routerLink="/" class="nav-brand" (click)="closeMenu()">
+      <span class="icon">🏦</span>
+      <span class="text">OnionBank</span>
+    </a>
+
+    <button class="mobile-menu-btn" (click)="toggleMenu()">
+      <span class="hamburger-icon">☰</span>
+    </button>
+
+    <div class="nav-links" [class.open]="isMenuOpen">
+      
+      <a routerLink="/" 
+         routerLinkActive="active" 
+         [routerLinkActiveOptions]="{exact: true}"
+         (click)="closeMenu()">
+         📊 Dashboard
+      </a>
+
+      <a routerLink="/accounts" 
+         routerLinkActive="active"
+         (click)="closeMenu()">
+         💳 Hesaplar
+      </a>
+
+      <a routerLink="/transactions" 
+         routerLinkActive="active"
+         (click)="closeMenu()">
+         💸 İşlemler
+      </a>
+
+      <a routerLink="/customers" 
+         routerLinkActive="active"
+         (click)="closeMenu()">
+         👥 Müşteriler
+      </a>
+
+      <a routerLink="/branches" 
+         routerLinkActive="active"
+         (click)="closeMenu()">
+         🏢 Şubeler
+      </a>
+
+    </div>
+
+    <div class="nav-profile">
+      <div class="avatar">AD</div>
+      <span class="username">Admin</span>
+    </div>
+
+  </div>
+</nav>

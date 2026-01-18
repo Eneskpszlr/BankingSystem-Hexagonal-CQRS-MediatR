@@ -1,0 +1,92 @@
+<app-confirm-dialog 
+  [isOpen]="isDeleteDialogOpen" 
+  title="Hesabı Sil" 
+  message="Bu hesabı silmek istediğinize emin misiniz? Bu işlem geri alınamaz."
+  (confirm)="confirmDelete()" 
+  (cancel)="cancelDelete()">
+</app-confirm-dialog>
+
+@if (isLoading) {
+  <app-loader [isLoading]="true"></app-loader>
+} @else {
+  
+  <div class="container fade-in">
+    
+    <div class="page-header">
+      <h2 class="page-title">Hesap Listesi</h2>
+      <a routerLink="/accounts/create" class="btn btn-primary">
+        <span>+</span> Yeni Hesap Aç
+      </a>
+    </div>
+  
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Hesap No</th>
+            <th>Müşteri</th> <th>Bakiye</th>
+            <th>Oluşturulma Tarihi</th>
+            <th>Durum</th>
+            <th class="text-right">İşlemler</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          @for (account of accounts; track account.id) {
+            <tr>
+              <td>
+                 <span class="badge badge-info">#{{ account.id }}</span>
+              </td>
+              
+              <td>
+                <div class="fw-500">{{ account.firstName }} {{ account.lastName }}</div>
+                <small class="text-muted" style="font-size: 0.8rem;">Müşteri #{{ account.customerId }}</small>
+              </td>
+              
+              <td>
+                <span [class.text-danger]="account.balance < 0" [class.text-success]="account.balance >= 0" style="font-weight: bold;">
+                  {{ account.balance | currency: (account.currencyCode || 'TRY') :'symbol-narrow':'1.2-2' }}
+                </span>
+              </td>
+              
+              <td>
+                {{ account.createdDate ? (account.createdDate | date:'dd.MM.yyyy HH:mm') : '-' }}
+              </td>
+              
+              <td>
+                <span class="badge" 
+                  [class.badge-success]="account.status === 'Active' || account.status === 'Inserted' || account.status === 'Updated'"
+                  [class.badge-danger]="account.status === 'Passive' || account.status === 'Deleted'">
+                  
+                  @if (account.status === 'Active' || account.status === 'Inserted' || account.status === 'Updated') {
+                    Aktif
+                  } @else {
+                    Pasif
+                  }
+                </span>
+              </td>
+              
+              <td class="text-right actions-cell">
+                <a [routerLink]="['/accounts/update', account.id]" class="btn btn-sm btn-secondary">
+                  Düzenle
+                </a>
+                
+                <button class="btn btn-sm btn-danger" (click)="onDeleteClick(account.id)">
+                  Sil
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="empty-state">
+                Henüz hiç hesap oluşturulmamış.
+              </td>
+            </tr>
+          }
+  
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+}

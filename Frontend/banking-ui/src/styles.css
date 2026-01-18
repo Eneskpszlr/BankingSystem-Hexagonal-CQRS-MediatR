@@ -1,0 +1,274 @@
+/* ========================================= */
+/* 🏦 MODERN BANKING DARK THEME VARIABLES    */
+/* ========================================= */
+:root {
+  /* Ana Renkler (Trust & Money) */
+  --primary-color: #3b82f6;       /* Güven Mavisi (Brand) */
+  --primary-hover: #2563eb;
+  --secondary-color: #64748b;     /* Gri (İkincil işlemler) */
+  --success-color: #10b981;       /* Para Girişi / Pozitif */
+  --danger-color: #ef4444;        /* Para Çıkışı / Hata */
+  --warning-color: #f59e0b;       /* Bekleyen İşlem */
+
+  /* Arka Planlar (Slate Palette) */
+  --bg-app: #0f172a;              /* En koyu zemin (Slate 900) */
+  --bg-card: #1e293b;             /* Kart/Tablo zemini (Slate 800) */
+  --bg-input: #334155;            /* Input zemini (Slate 700) */
+  --border-color: #334155;        /* Kenarlıklar */
+
+  /* Yazı Renkleri */
+  --text-main: #f8fafc;           /* Ana Yazı (Beyazımsı) */
+  --text-muted: #94a3b8;          /* Silik Yazı (Gri) */
+}
+
+/* ========================================= */
+/* 🛠️ GLOBAL RESET & TYPOGRAPHY             */
+/* ========================================= */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased; /* Yazıları pürüzsüzleştirir */
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.2s;
+}
+
+h1, h2, h3, h4, h5 {
+  margin: 0 0 1rem 0;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+/* ========================================= */
+/* 📦 LAYOUT UTILITIES                       */
+/* ========================================= */
+.container {
+  max-width: 1400px; /* Geniş ekran bankacılık tabloları için */
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.page-title {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  letter-spacing: -0.5px;
+}
+
+/* ========================================= */
+/* 📊 DATA TABLES (Kurumsal Tablo)           */
+/* ========================================= */
+.table-container {
+  background-color: var(--bg-card);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  overflow-x: auto; /* Mobilde yatay kaydırma */
+  border: 1px solid var(--border-color);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  text-align: left;
+}
+
+thead th {
+  background-color: #1e293b; /* Header biraz daha koyu olabilir */
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  padding: 1rem 1.5rem;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--border-color);
+}
+
+tbody td {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-main);
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Zebra Striping (Okunabilirlik için) */
+tbody tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+tbody tr:hover {
+  background-color: rgba(59, 130, 246, 0.1); /* Hoverda hafif mavi */
+}
+
+/* ========================================= */
+/* 📝 FORMS (Profesyonel Formlar)            */
+/* ========================================= */
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--text-muted);
+}
+
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+select,
+textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: var(--bg-app); /* Card üstünde kontrast olsun */
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--text-main);
+  font-size: 0.95rem;
+  transition: all 0.2s;
+  outline: none;
+}
+
+input:focus, select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); /* Focus ring */
+}
+
+/* Hata Durumu */
+input.ng-invalid.ng-touched {
+  border-color: var(--danger-color);
+}
+
+.error-message {
+  color: var(--danger-color);
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+/* ========================================= */
+/* 🔘 BUTTONS (Modern Düğmeler)              */
+/* ========================================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  gap: 8px; /* İkon ve yazı arası boşluk */
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  filter: grayscale(100%);
+}
+
+/* Primary (Kaydet / Ekle) */
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.4);
+}
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+/* Danger (Sil / İptal) */
+.btn-danger {
+  background-color: rgba(239, 68, 68, 0.1); /* Hafif kırmızı zemin */
+  color: var(--danger-color);
+  border: 1px solid var(--danger-color);
+}
+.btn-danger:hover:not(:disabled) {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+/* Secondary (Vazgeç) */
+.btn-secondary {
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+}
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--bg-input);
+  color: var(--text-main);
+}
+
+/* Small Buttons (Tablo İçi) */
+.btn-sm {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+}
+
+/* ========================================= */
+/* 🏷️ BADGES (Durum Etiketleri)             */
+/* ========================================= */
+.badge {
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px; /* Tam yuvarlak */
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.badge-success { background: rgba(16, 185, 129, 0.2); color: var(--success-color); }
+.badge-danger  { background: rgba(239, 68, 68, 0.2);  color: var(--danger-color); }
+.badge-warning { background: rgba(245, 158, 11, 0.2); color: var(--warning-color); }
+.badge-info    { background: rgba(59, 130, 246, 0.2); color: var(--primary-color); }
+
+/* ========================================= */
+/* 📱 RESPONSIVE                             */
+/* ========================================= */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}
+
+/* ========================================= */
+/* ✨ ANIMATIONS                             */
+/* ========================================= */
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

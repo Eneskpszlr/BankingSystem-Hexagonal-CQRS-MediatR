@@ -1,0 +1,127 @@
+<app-loader [isLoading]="isLoading || isSubmitting"></app-loader>
+
+@if (!isLoading) {
+  <div class="container fade-in">
+    
+    <div class="page-header">
+      <h2 class="page-title">Yeni İşlem</h2>
+    </div>
+
+    @if (errorMessage) {
+      <div class="alert alert-danger" style="background: #ffebee; color: #c62828; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border: 1px solid #ef9a9a;">
+        <strong>Hata:</strong> {{ errorMessage }}
+      </div>
+    }
+
+    <div class="form-card">
+      
+      <div class="tabs">
+        <button type="button" 
+                class="tab-btn" 
+                [class.active]="selectedOperation === 'Deposit'"
+                (click)="setOperation('Deposit')">
+          💰 Para Yatır
+        </button>
+        
+        <button type="button" 
+                class="tab-btn" 
+                [class.active]="selectedOperation === 'Withdraw'"
+                (click)="setOperation('Withdraw')">
+          💸 Para Çek
+        </button>
+        
+        <button type="button" 
+                class="tab-btn" 
+                [class.active]="selectedOperation === 'Transfer'"
+                (click)="setOperation('Transfer')">
+          🔄 Havale / Transfer
+        </button>
+      </div>
+
+      <form [formGroup]="selectedOperation === 'Transfer' ? transferForm : simpleForm" (ngSubmit)="onSubmit()">
+        
+        <div class="form-group">
+          <label>
+            {{ selectedOperation === 'Deposit' ? 'Hangi Hesaba Yatırılacak?' : 'Hangi Hesaptan Çekilecek?' }}
+          </label>
+          
+          <select formControlName="accountId">
+            <option [ngValue]="null">-- Hesap Seçiniz --</option>
+            
+            @for (acc of accounts; track acc.id) {
+              <option [ngValue]="acc.id">
+                {{ acc.firstName }} {{ acc.lastName }} - {{ acc.accountNumber || ('#'+acc.id) }} 
+                ({{ acc.balance | currency: (acc.currencyCode || 'TRY'):'symbol-narrow' }})
+              </option>
+            }
+          </select>
+          
+          @if (hasError('accountId', 'required')) {
+            <div class="error-message">Hesap seçimi zorunludur.</div>
+          }
+        </div>
+
+        @if (selectedOperation === 'Transfer') {
+          <div class="form-group fade-in">
+            <label>Alıcı Hesap Numarası (Hedef)</label>
+            <input type="number" formControlName="targetAccountId" placeholder="Örn: 102">
+            
+            @if (hasError('targetAccountId', 'required')) {
+              <div class="error-message">Alıcı hesap numarası zorunludur.</div>
+            }
+            @if (hasError('targetAccountId', 'min')) {
+              <div class="error-message">Geçerli bir hesap numarası giriniz.</div>
+            }
+          </div>
+        }
+
+        <div class="form-group">
+          <label>Tutar</label>
+          <input type="number" formControlName="amount" placeholder="0.00">
+          
+          @if (hasError('amount', 'required')) {
+            <div class="error-message">Tutar zorunludur.</div>
+          }
+          @if (hasError('amount', 'notGreaterThanZero')) {
+            <div class="error-message">Tutar 0'dan büyük olmalıdır.</div>
+          }
+        </div>
+
+        <div class="form-group">
+          <label>Para Birimi</label>
+          <select formControlName="currencyCode">
+            <option value="TRY">TRY</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Açıklama</label>
+          <textarea formControlName="description" rows="3" placeholder="Örn: Kira ödemesi"></textarea>
+          
+          @if (hasError('description', 'required')) {
+            <div class="error-message">Açıklama girmek zorunludur.</div>
+          }
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+            @if (isSubmitting) {
+              İşlem Yapılıyor...
+            } @else {
+              @if (selectedOperation === 'Deposit') { 📥 Para Yatır }
+              @if (selectedOperation === 'Withdraw') { 📤 Para Çek }
+              @if (selectedOperation === 'Transfer') { 🚀 Transfer Et }
+            }
+          </button>
+          
+          <a routerLink="/transactions" class="btn btn-secondary">
+            İptal
+          </a>
+        </div>
+
+      </form>
+    </div>
+  </div>
+}

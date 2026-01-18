@@ -1,0 +1,40 @@
+/* --- FORM KARTI --- */
+.form-card {
+  max-width: 800px;
+  background: var(--bg-card);
+  padding: 2rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+/* --- GRID YAPISI --- */
+/* Lokasyon alanı (3 eşit parça) */
+.form-grid-location {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+/* --- BUTONLAR --- */
+.form-actions {
+  margin-top: 2rem;
+  display: flex;
+  gap: 10px;
+}
+
+/* --- ANİMASYON --- */
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- MOBİL UYUM (Responsive) --- */
+@media (max-width: 768px) {
+  .form-grid-location {
+    grid-template-columns: 1fr;
+  }
+}
