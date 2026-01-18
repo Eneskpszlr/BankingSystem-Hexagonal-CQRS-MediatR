@@ -40,6 +40,7 @@ namespace BankingHexagonal.Persistence.EFRepositories
             return await query
                 .AsNoTracking()
                 .OrderByDescending(t => t.CreatedDate)
+                .Take(50)
                 .ToListAsync();
         }
     }

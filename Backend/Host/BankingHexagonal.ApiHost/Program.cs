@@ -1,23 +1,21 @@
 using BankingHexagonal.Application.CqrsAndMediatr.Commands.Accounts;
 using BankingHexagonal.Application.DependencyResolvers;
-using BankingHexagonal.Application.PrimaryPorts.AuthPorts;
 using BankingHexagonal.Domain.Entities;
 using BankingHexagonal.Infrastructure.DependencyResolvers;
 using BankingHexagonal.Infrastructure.Services;
 using BankingHexagonal.Persistence.EFData;
 using BankingHexagonal.Persistence.ServiceRegistration;
-using BankingHexagonal.WebApi;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Presentation.Middlewares;
 using System.Text;
+
 namespace BankingHexagonal.ApiHost
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -33,7 +31,7 @@ namespace BankingHexagonal.ApiHost
                 options.Password.RequireLowercase = false;
                 options.User.RequireUniqueEmail = false;
             })
-            .AddEntityFrameworkStores<MyContext>() // MyContext üzerinden çalýþacaðýný belirtiyoruz
+            .AddEntityFrameworkStores<MyContext>()
             .AddDefaultTokenProviders();
 
             var jwtSettings = builder.Configuration.GetSection("JwtSettings");
@@ -59,18 +57,18 @@ namespace BankingHexagonal.ApiHost
                 };
             });
 
-            builder.Services.AddScoped<ITokenService, TokenService>();
-
             builder.Services.AddMediatR(cfg =>
             {
                 cfg.RegisterServicesFromAssembly(typeof(CreateAccountCommand).Assembly);
             });
+
             builder.Services.AddInfrastructureServices();
             builder.Services.AddApplicationServices();
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
+
+            // Swagger Ayarlarý
             builder.Services.AddSwaggerGen(c =>
             {
                 c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
@@ -98,6 +96,7 @@ namespace BankingHexagonal.ApiHost
                 });
             });
 
+            // CORS Ayarlarý
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAngularApp",
@@ -111,6 +110,7 @@ namespace BankingHexagonal.ApiHost
 
             var app = builder.Build();
 
+            // Global Exception Middleware
             app.UseGlobalExceptionMiddleware();
 
             // Configure the HTTP request pipeline.
@@ -127,8 +127,21 @@ namespace BankingHexagonal.ApiHost
             app.UseAuthentication();
             app.UseAuthorization();
 
-
             app.MapControllers();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    await BankingHexagonal.Persistence.SeedData.InitializeAsync(services);
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "Veritabaný seed iþlemi sýrasýnda hata oluþtu.");
+                }
+            }
 
             app.Run();
         }

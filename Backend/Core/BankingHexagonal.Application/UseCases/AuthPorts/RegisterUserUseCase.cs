@@ -15,64 +15,74 @@ namespace BankingHexagonal.Application.UseCases.AuthPorts
     {
         private readonly ICustomerRepository _customerRepository;
         private readonly IAuthRepository _authRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public RegisterUserUseCase(ICustomerRepository customerRepository, IAuthRepository authRepository)
+        public RegisterUserUseCase(ICustomerRepository customerRepository, IAuthRepository authRepository, IUnitOfWork unitOfWork)
         {
             _customerRepository = customerRepository;
             _authRepository = authRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<string> ExecuteAsync(string firstName, string lastName, string tckn, DateTime birthDate, string password)
         {
-            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            // 1. Müşteri Numarası ve Adres Hazırlığı
+            var customerNumber = "ON" + new Random().Next(10000000, 99999999).ToString();
+            var defaultAddress = new Address(
+                street: "Adres Girilmedi",
+                city: "Şehir Girilmedi",
+                country: "Türkiye",
+                zipCode: "00000"
+            );
+
+            // 2. Customer Entity Oluşturma
+            var customer = new Customer(
+                firstName: firstName,
+                lastName: lastName,
+                identityNumber: tckn,
+                customerNumber: customerNumber,
+                birthDate: birthDate,
+                email: $"{tckn}@onionbank.com",
+                phone: "",
+                address: defaultAddress
+            );
+
+            // 3. Müşteriyi Veritabanına Kaydet
+            await _customerRepository.CreateAsync(customer);
+            await _unitOfWork.SaveChangesAsync();
+
+            try
             {
-                try
+                // 4. Identity User (AppUser) Hazırlığı
+                var appUser = new AppUser
                 {
-                    var customerNumber = "ON" + new Random().Next(10000000, 99999999).ToString();
-                    var defaultAddress = new Address(
-                        street: "Adres Girilmedi",
-                        city: "Şehir Girilmedi",
-                        country: "Türkiye",
-                        zipCode: "00000"
-                    );
+                    UserName = tckn,
+                    CustomerNumber = customerNumber,
+                    CustomerId = customer.Id,
+                };
 
-                    // Constructor Kullanımı
-                    var customer = new Customer(
-                        firstName: firstName,
-                        lastName: lastName,
-                        identityNumber: tckn,
-                        customerNumber: customerNumber,
-                        birthDate: birthDate,
-                        email: $"{tckn}@onionbank.com",
-                        phone: "",
-                        address: defaultAddress
-                    );
+                // 5. Kullanıcıyı Kaydet
+                var registerResult = await _authRepository.RegisterUserAsync(appUser, password, "Customer");
 
-                    var createdCustomer = await _customerRepository.AddAsync(customer);
-
-                    // 2. Kullanıcı (Identity) Oluştur
-                    var appUser = new AppUser
-                    {
-                        UserName = tckn,
-                        CustomerNumber = customerNumber,
-                        CustomerId = createdCustomer.Id,
-                        Customer = createdCustomer
-                    };
-
-                    var registerResult = await _authRepository.RegisterUserAsync(appUser, password, "Customer");
-
-                    if (!registerResult.IsSuccess)
-                    {
-                        throw new Exception($"Kayıt başarısız: {registerResult.ErrorMessage}");
-                    }
-
-                    scope.Complete();
-                    return "Kayıt Başarılı";
-                }
-                catch
+                if (!registerResult.IsSuccess)
                 {
-                    throw;
+                    _customerRepository.Delete(customer);
+                    await _unitOfWork.SaveChangesAsync();
+
+                    throw new Exception($"Kullanıcı oluşturulamadı: {registerResult.ErrorMessage}");
                 }
+
+                return "Kayıt Başarılı";
+            }
+            catch (Exception)
+            {
+                // Beklenmedik bir hata olursa da müşteriyi silmeye çalış
+                if (customer.Id > 0)
+                {
+                    _customerRepository.Delete(customer);
+                    await _unitOfWork.SaveChangesAsync();
+                }
+                throw;
             }
         }
     }

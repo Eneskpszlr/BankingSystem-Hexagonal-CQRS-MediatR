@@ -30,6 +30,7 @@ namespace BankingHexagonal.Persistence.ServiceRegistration
                        .AddInterceptors(interceptor);
             });
 
+
             // 3. Repositories (Specific Repositories)
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();

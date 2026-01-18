@@ -21,7 +21,7 @@ namespace BankingHexagonal.Application.UseCases.Accounts
             account.UpdateDetails(
             command.AccountNumber,
             command.BranchId,
-            (BankingHexagonal.Domain.Enums.DataStatus)command.Status
+            (Domain.Enums.DataStatus)command.Status
         );
 
             // Repoda Update çağırmaya gerek yok (Tracking açık).

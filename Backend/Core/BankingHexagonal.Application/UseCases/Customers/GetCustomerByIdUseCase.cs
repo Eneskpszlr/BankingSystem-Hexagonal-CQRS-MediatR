@@ -20,7 +20,7 @@ namespace BankingHexagonal.Application.UseCases.Customers
                 throw new DomainException("Sadece kendi profilinizi görüntüleyebilirsiniz.");
             }
 
-            var customer = await _repository.GetByIdAsync(id);
+            var customer = await _repository.GetByIdAsync(requestedId);
             if (customer == null) 
                 throw new DomainException("Customer bulunamadı");
             return customer;

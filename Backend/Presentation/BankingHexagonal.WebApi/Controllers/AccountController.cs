@@ -1,6 +1,7 @@
 ﻿using BankingHexagonal.Application.CqrsAndMediatr.Commands.Accounts;
 using BankingHexagonal.Application.CqrsAndMediatr.Queries.Accounts;
 using BankingHexagonal.Application.PrimaryPorts.UserPorts;
+using BankingHexagonal.Domain.Constants;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -51,10 +52,6 @@ namespace BankingHexagonal.WebApi.Controllers
             };
 
             var result = await _mediator.Send(query);
-
-            if (result == null)
-                return NotFound("Hesap bulunamadı.");
-
             return Ok(result);
         }
 
@@ -84,7 +81,7 @@ namespace BankingHexagonal.WebApi.Controllers
 
 
         [HttpPut]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> Update([FromBody] UpdateAccountCommand command)
         {
             var result = await _mediator.Send(command);
@@ -93,7 +90,7 @@ namespace BankingHexagonal.WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _mediator.Send(new RemoveAccountCommand { Id = id });

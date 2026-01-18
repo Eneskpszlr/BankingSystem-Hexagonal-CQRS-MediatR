@@ -36,9 +36,6 @@ namespace BankingHexagonal.Domain.Entities
             int? targetAccountId = null)
         {
             // 1. Value Object Oluşturma
-            // Ancak Transaction'a özel "0 olamaz" kuralını burada da işletebiliriz.
-            if (amount <= 0) throw new InvalidAmountException();
-
             Amount = new Money(amount, currencyCode);
 
             // 2. Transfer Kontrolü: Hedef Hesap Var mı?

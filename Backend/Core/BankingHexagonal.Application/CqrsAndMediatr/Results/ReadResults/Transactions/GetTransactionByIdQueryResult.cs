@@ -8,7 +8,7 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Results.ReadResults.Transa
         public int AccountId { get; set; }
         public int? TargetAccountId { get; set; } // Transfer ise
 
-        public TransactionType TransactionType { get; set; }
+        public string TransactionType { get; set; }
         public string Description { get; set; }
         public string ReferenceNumber { get; set; } //Dekont No
 

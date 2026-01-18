@@ -1,4 +1,5 @@
-﻿using BankingHexagonal.Application.CqrsAndMediatr.Queries.Accounts;
+﻿using AutoMapper;
+using BankingHexagonal.Application.CqrsAndMediatr.Queries.Accounts;
 using BankingHexagonal.Application.CqrsAndMediatr.Results.ReadResults.Accounts;
 using BankingHexagonal.Application.PrimaryPorts.AccountPorts;
 using BankingHexagonal.Domain.SecondaryPorts;
@@ -14,29 +15,19 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Read.Accounts
     public class GetAccountsQueryHandler : IRequestHandler<GetAccountsQuery, List<GetAccountsQueryResult>>
     {
         private readonly IGetAccountsUseCase _useCase;
+        private readonly IMapper _mapper;
 
-        public GetAccountsQueryHandler(IGetAccountsUseCase useCase)
+        public GetAccountsQueryHandler(IGetAccountsUseCase useCase, IMapper mapper)
         {
             _useCase = useCase;
+            _mapper = mapper;
         }
 
         public async Task<List<GetAccountsQueryResult>> Handle(GetAccountsQuery request, CancellationToken cancellationToken)
         {
             var accounts = await _useCase.ExecuteAsync(request.UserId, request.IsAdmin);
 
-            return accounts.Select(a => new GetAccountsQueryResult
-            {
-                Id = a.Id,
-                AccountNumber = a.AccountNumber,
-
-                // --- VALUE OBJECT MAPPING ---
-                Balance = a.Balance.Amount,
-                CurrencyCode = a.Balance.Currency,
-
-                BranchId = a.BranchId,
-                CustomerId = a.CustomerId,
-                Status = a.Status.ToString()
-            }).ToList();
+            return _mapper.Map<List<GetAccountsQueryResult>>(accounts);
         }
     }
 }

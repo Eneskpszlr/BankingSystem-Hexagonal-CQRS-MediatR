@@ -1,5 +1,6 @@
 ﻿using BankingHexagonal.Application.CqrsAndMediatr.Results.ReadResults.Transactions;
 using MediatR;
+using System.Text.Json.Serialization;
 
 namespace BankingHexagonal.Application.CqrsAndMediatr.Queries.Transactions
 {
@@ -11,5 +12,8 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Queries.Transactions
         }
 
         public int Id { get; set; }
+
+        [JsonIgnore]
+        public int UserId { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using BankingHexagonal.Application.PrimaryPorts.AccountPorts;
+﻿using BankingHexagonal.Application.Behaviors;
+using BankingHexagonal.Application.PrimaryPorts.AccountPorts;
 using BankingHexagonal.Application.PrimaryPorts.AuthPorts;
 using BankingHexagonal.Application.PrimaryPorts.BranchPorts;
 using BankingHexagonal.Application.PrimaryPorts.CustomerPorts;
@@ -8,10 +9,12 @@ using BankingHexagonal.Application.UseCases.AuthPorts;
 using BankingHexagonal.Application.UseCases.Branches;
 using BankingHexagonal.Application.UseCases.Customers;
 using BankingHexagonal.Application.UseCases.Transactions;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,6 +24,8 @@ namespace BankingHexagonal.Application.DependencyResolvers
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
+            var assembly = Assembly.GetExecutingAssembly();
+
             services.AddScoped<ICreateCustomerUseCase, CreateCustomerUseCase>();
             services.AddScoped<IUpdateCustomerUseCase, UpdateCustomerUseCase>();
             services.AddScoped<IRemoveCustomerUseCase, RemoveCustomerUseCase>();
@@ -47,6 +52,10 @@ namespace BankingHexagonal.Application.DependencyResolvers
 
             services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
             services.AddScoped<ILoginUseCase, LoginUseCase>();
+
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+            services.AddAutoMapper(assembly);
 
             return services;
 

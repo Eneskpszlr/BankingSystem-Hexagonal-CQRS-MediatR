@@ -33,6 +33,11 @@ namespace BankingHexagonal.WebApi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
+            var query = new GetTransactionByIdQuery(id)
+            {
+                UserId = _currentUserService.GetUserId()
+            };
+
             var result = await _mediator.Send(new GetTransactionByIdQuery(id));
             if (result == null) 
                 return NotFound("İşlem bulunamadı.");

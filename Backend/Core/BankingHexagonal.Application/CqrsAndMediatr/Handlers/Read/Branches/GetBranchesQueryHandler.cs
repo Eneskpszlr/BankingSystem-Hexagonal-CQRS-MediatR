@@ -1,4 +1,5 @@
-﻿using BankingHexagonal.Application.CqrsAndMediatr.Queries.Branches;
+﻿using AutoMapper;
+using BankingHexagonal.Application.CqrsAndMediatr.Queries.Branches;
 using BankingHexagonal.Application.CqrsAndMediatr.Results.ReadResults.Branches;
 using BankingHexagonal.Application.PrimaryPorts.BranchPorts;
 using MediatR;
@@ -13,27 +14,19 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Read.Branches
     public class GetBranchesQueryHandler : IRequestHandler<GetBranchesQuery, List<GetBranchesQueryResult>>
     {
         private readonly IGetBranchesUseCase _useCase;
+        private readonly IMapper _mapper;
 
-        public GetBranchesQueryHandler(IGetBranchesUseCase useCase)
+        public GetBranchesQueryHandler(IGetBranchesUseCase useCase, IMapper mapper)
         {
             _useCase = useCase;
+            _mapper = mapper;
         }
 
         public async Task<List<GetBranchesQueryResult>> Handle(GetBranchesQuery request, CancellationToken cancellationToken)
         {
             var branches = await _useCase.ExecuteAsync();
 
-            return branches.Select(b => new GetBranchesQueryResult
-            {
-                Id = b.Id,
-                BranchName = b.BranchName,
-
-                // --- VALUE OBJECT MAPPING ---
-                Street = b.Address.Street,
-                City = b.Address.City,
-                Country = b.Address.Country,
-                ZipCode = b.Address.ZipCode
-            }).ToList();
+            return _mapper.Map<List<GetBranchesQueryResult>>(branches); 
         }
     }
 }

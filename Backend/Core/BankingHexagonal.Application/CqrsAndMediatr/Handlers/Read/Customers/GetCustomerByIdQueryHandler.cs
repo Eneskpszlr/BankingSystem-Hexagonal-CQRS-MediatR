@@ -1,4 +1,5 @@
-﻿using BankingHexagonal.Application.CqrsAndMediatr.Queries.Customers;
+﻿using AutoMapper;
+using BankingHexagonal.Application.CqrsAndMediatr.Queries.Customers;
 using BankingHexagonal.Application.CqrsAndMediatr.Results.ReadResults.Customers;
 using BankingHexagonal.Application.PrimaryPorts.CustomerPorts;
 using MediatR;
@@ -8,29 +9,17 @@ namespace BankingHexagonal.Application.CqrsAndMediatr.Handlers.Read.Customers
     public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByIdQuery, GetCustomerByIdQueryResult?>
     {
         private readonly IGetCustomerByIdUseCase _useCase;
-        public GetCustomerByIdQueryHandler(IGetCustomerByIdUseCase useCase)
+        private readonly IMapper _mapper;
+        public GetCustomerByIdQueryHandler(IGetCustomerByIdUseCase useCase, IMapper mapper)
         {
             _useCase = useCase;
+            _mapper = mapper;
         }
         public async Task<GetCustomerByIdQueryResult> Handle(GetCustomerByIdQuery request, CancellationToken cancellationToken)
         {
-            var customer = await _useCase.ExecuteAsync(request.Id);
+            var customer = await _useCase.ExecuteAsync(request.Id, request.UserId, request.IsAdmin);
 
-            return new GetCustomerByIdQueryResult
-            {
-                Id = customer.Id,
-                FirstName = customer.FirstName,
-                LastName = customer.LastName,
-                IdentityNumber = customer.IdentityNumber,
-                Email = customer.Email,
-                Phone = customer.Phone,
-
-                // --- VALUE OBJECT MAPPING ---
-                Street = customer.Address.Street,
-                City = customer.Address.City,
-                Country = customer.Address.Country,
-                ZipCode = customer.Address.ZipCode
-            };
+            return _mapper.Map<GetCustomerByIdQueryResult>(customer);
         }
     }
 }

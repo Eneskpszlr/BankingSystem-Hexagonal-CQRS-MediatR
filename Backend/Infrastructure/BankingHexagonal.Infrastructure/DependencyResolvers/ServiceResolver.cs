@@ -14,10 +14,9 @@ namespace BankingHexagonal.Infrastructure.DependencyResolvers
 {
     public static class ServiceResolver
     {
-        public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
+        public static void AddInfrastructureServices(this IServiceCollection services)
         {
             services.AddHttpContextAccessor();
-
             services.AddScoped<ICurrentUserService, CurrentUserService>();
             services.AddScoped<ITokenService, TokenService>();
         }

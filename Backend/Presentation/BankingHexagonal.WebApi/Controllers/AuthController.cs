@@ -23,16 +23,8 @@ namespace BankingHexagonal.WebApi.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterUserCommand command)
         {
-            try
-            {
-                var result = await _mediator.Send(command);
-
-                return Ok(new { Message = result });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { Error = ex.Message });
-            }
+            var result = await _mediator.Send(command);
+            return Ok(new { Message = result });
         }
 
         [HttpPost("login")]
