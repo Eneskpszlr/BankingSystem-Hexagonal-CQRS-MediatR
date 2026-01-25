@@ -15,7 +15,7 @@
 /* --- STATS GRID --- */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* Responsive Grid */
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1.5rem;
   margin-bottom: 2.5rem;
 }
@@ -149,4 +149,59 @@
   .dashboard-sections {
     grid-template-columns: 1fr;
   }
+}
+
+/* Müşteri Hesap Kartları Grid */
+.account-list-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.mini-account-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 1.2rem;
+  transition: all 0.2s;
+}
+
+.mini-account-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--primary-color);
+  transform: translateY(-3px);
+}
+
+.acc-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.acc-balance {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+}
+
+.acc-actions {
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-link {
+  font-size: 0.85rem;
+  color: var(--primary-color);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn-link:hover {
+  text-decoration: underline;
 }

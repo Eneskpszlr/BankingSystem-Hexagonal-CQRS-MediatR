@@ -41,33 +41,41 @@ export class CreateTransaction implements OnInit {
   }
 
   loadAccounts() {
-    this.isLoading = true;
-    
-    this._accountService.getAll()
-      .pipe(
-        finalize(() => {
-          this.isLoading = false;
-          this.cd.detectChanges();
-        })
-      )
-      .subscribe({
-        next: (res: any) => {
-          console.log('İşlem Sayfası İçin Hesaplar:', res);
-          
-          if (Array.isArray(res)) {
-             this.accounts = res;
-          } else if (res && res.data) {
-             this.accounts = res.data;
-          } else {
-             this.accounts = [];
-          }
-        },
-        error: (err) => {
-          console.error('Hesaplar yüklenemedi', err);
-          this._notificationService.error('Hesap listesi yüklenemedi.');
+  this.isLoading = true;
+
+  this._accountService.getAll()
+    .pipe(
+      finalize(() => {
+        this.isLoading = false;
+        this.cd.detectChanges();
+      })
+    )
+    .subscribe({
+      next: (res: any) => {
+        let tempAccounts = [];
+
+        console.log('İşlem Sayfası İçin Hesaplar:', res);
+
+        if (Array.isArray(res)) {
+            tempAccounts = res;
+        } else if (res && res.data) {
+            tempAccounts = res.data;
+        } else {
+            tempAccounts = [];
         }
-      });
-  }
+
+        this.accounts = tempAccounts.filter((acc: any) => 
+            acc.status === 'Active' || 
+            acc.status === '1' || 
+            acc.status === 1
+        );
+      },
+      error: (err) => {
+        console.error('Hesaplar yüklenemedi', err);
+        this._notificationService.error('Hesap listesi yüklenemedi.');
+      }
+    });
+}
 
   setOperation(type: OperationType) {
     this.selectedOperation = type;

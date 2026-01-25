@@ -31,23 +31,42 @@
          💸 İşlemler
       </a>
 
-      <a routerLink="/customers" 
-         routerLinkActive="active"
-         (click)="closeMenu()">
-         👥 Müşteriler
-      </a>
+      @if (isAdmin()) {
+        <a routerLink="/customers" 
+           routerLinkActive="active"
+           (click)="closeMenu()">
+           👥 Müşteriler
+        </a>
 
-      <a routerLink="/branches" 
-         routerLinkActive="active"
-         (click)="closeMenu()">
-         🏢 Şubeler
-      </a>
+        <a routerLink="/branches" 
+           routerLinkActive="active"
+           (click)="closeMenu()">
+           🏢 Şubeler
+        </a>
+      }
+
+      <button class="mobile-logout-btn" (click)="onLogout()">
+        Çıkış Yap 🚪
+      </button>
 
     </div>
 
-    <div class="nav-profile">
-      <div class="avatar">AD</div>
-      <span class="username">Admin</span>
+    <div class="nav-profile desktop-only">
+      
+      <div class="user-info">
+          <a routerLink="/profile" class="username" style="cursor: pointer; text-decoration: none;">
+              {{ user()?.fullName }}
+          </a>
+          <span class="user-role">{{ isAdmin() ? 'Yönetici' : 'Müşteri' }}</span>
+      </div>
+
+      <div class="avatar">
+        {{ user()?.fullName?.charAt(0) }}
+      </div>
+
+      <button class="btn-logout" (click)="onLogout()" title="Çıkış Yap">
+        🚪
+      </button>
     </div>
 
   </div>

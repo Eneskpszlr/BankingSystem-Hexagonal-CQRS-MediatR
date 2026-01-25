@@ -5,7 +5,12 @@
     "types": []
   },
   "files": [
-    "src/main.ts"
+    "src/main.ts",
+    "./src/app/core/models/auth/LoggedInUser.ts",
+    "./src/app/core/models/auth/UserToken.ts",
+    "./src/app/core/models/auth/AuthResponse.ts",
+    "./src/app/core/models/auth/RegisterRequest.ts",
+    "./src/app/core/models/auth/LoginRequest.ts"
   ],
   "include": [
     "src/**/*.d.ts",

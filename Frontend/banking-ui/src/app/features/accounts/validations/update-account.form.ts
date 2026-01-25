@@ -1,7 +1,7 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UpdateAccountRequest } from '../../../core/models/accounts';
 
-// 1. Form İçeriği (Update işleminde bazı alanlar nullable olabilir)
+// 1. Form İçeriği
 export type UpdateAccountFormContent = {
   id: FormControl<number>;
   name: FormControl<string | null>;
@@ -32,7 +32,7 @@ export function updateAccountForm(): UpdateAccountFormGroup {
   });
 }
 
-// 3. Mapper (Boş gelen değerleri undefined yaparak backend'e göndermiyoruz)
+// 3. Mapper
 export function toUpdateAccountRequest(form: UpdateAccountFormGroup): UpdateAccountRequest {
   const raw = form.getRawValue();
 

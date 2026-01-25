@@ -6,6 +6,7 @@ import { finalize } from 'rxjs';
 import { CustomerService } from '../../services/customer.service';
 import { createCustomerForm, toCreateCustomerRequest } from '../../validations/create-customer.form';
 import { Loader } from '../../../../shared/components/loader/loader';
+import { NotificationService } from '../../../../core/services/notification';
 
 @Component({
   selector: 'app-create-customer',
@@ -16,12 +17,13 @@ import { Loader } from '../../../../shared/components/loader/loader';
 })
 export class CreateCustomer {
   private _customerService = inject(CustomerService);
+  private _notificationService = inject(NotificationService); // Inject ettiğinden emin ol
   private _router = inject(Router);
   private cd = inject(ChangeDetectorRef);
 
   form = createCustomerForm();
   isSubmitting = false;
-  errorMessage = '';
+  // errorMessage değişkenini sildik, gerek yok.
 
   onSubmit() {
     if (this.form.invalid) {
@@ -30,7 +32,6 @@ export class CreateCustomer {
     }
 
     this.isSubmitting = true;
-    this.errorMessage = '';
     const request = toCreateCustomerRequest(this.form);
 
     this._customerService.create(request)
@@ -41,23 +42,15 @@ export class CreateCustomer {
         })
       )
       .subscribe({
-        next: () => {
-          console.log('Müşteri oluşturuldu');
+        next: (res) => { // 'res' CommandResponse tipindedir
+          // Backend'den gelen mesajı göster
+          this._notificationService.success(res.message || 'Müşteri başarıyla oluşturuldu');
           this._router.navigate(['/customers']);
         },
         error: (err) => {
           console.error('Hata:', err);
-          
-          // 400 Hata Yönetimi
-          if (err.status === 400) {
-             if (err.error?.errors) {
-               this.errorMessage = Object.values(err.error.errors).flat().join(', ');
-             } else {
-               this.errorMessage = err.error?.title || 'Geçersiz müşteri bilgileri.';
-             }
-          } else {
-             this.errorMessage = 'Müşteri oluşturulurken bir hata meydana geldi.';
-          }
+          // BURADAKİ MANUEL HATA YÖNETİMİNİ SİLDİK.
+          // Interceptor otomatik olarak Toast mesajı basacaktır.
         }
       });
   }

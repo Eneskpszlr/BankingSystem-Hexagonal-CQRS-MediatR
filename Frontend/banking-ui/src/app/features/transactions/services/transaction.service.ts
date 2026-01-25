@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Transaction, TransactionRequest, TransferRequest } from '../../../core/models/transactions/index';
-import { ApiResponse } from '../../../core/models/api-response.model';
+import { CommandResponse } from '../../../core/models/api-response.model';
 import { API_ENDPOINTS } from '../../../core/constants/api-endpoints';
 
 // Filtreleme için tip tanımı
@@ -19,7 +19,7 @@ export class TransactionService {
   
   private _http = inject(HttpClient);
 
-  getAll(filter: TransactionFilter = {}): Observable<ApiResponse<Transaction[]>> {
+  getAll(filter: TransactionFilter = {}): Observable<Transaction[]> {
     let params = new HttpParams();
 
     // 1. Hesap ID var mı?
@@ -37,18 +37,18 @@ export class TransactionService {
       params = params.set('endDate', filter.endDate);
     }
 
-    return this._http.get<ApiResponse<Transaction[]>>(API_ENDPOINTS.TRANSACTIONS.BASE, { params });
+    return this._http.get<Transaction[]>(API_ENDPOINTS.TRANSACTIONS.BASE, { params });
   }
 
-  deposit(request: TransactionRequest): Observable<ApiResponse<number>> {
-    return this._http.post<ApiResponse<number>>(API_ENDPOINTS.TRANSACTIONS.DEPOSIT, request);
+  deposit(request: TransactionRequest): Observable<CommandResponse> {
+    return this._http.post<CommandResponse>(API_ENDPOINTS.TRANSACTIONS.DEPOSIT, request);
   }
 
-  withdraw(request: TransactionRequest): Observable<ApiResponse<number>> {
-    return this._http.post<ApiResponse<number>>(API_ENDPOINTS.TRANSACTIONS.WITHDRAW, request);
+  withdraw(request: TransactionRequest): Observable<CommandResponse> {
+    return this._http.post<CommandResponse>(API_ENDPOINTS.TRANSACTIONS.WITHDRAW, request);
   }
 
-  transfer(request: TransferRequest): Observable<ApiResponse<number>> {
-    return this._http.post<ApiResponse<number>>(API_ENDPOINTS.TRANSACTIONS.TRANSFER, request);
+  transfer(request: TransferRequest): Observable<CommandResponse> {
+    return this._http.post<CommandResponse>(API_ENDPOINTS.TRANSACTIONS.TRANSFER, request);
   }
 }

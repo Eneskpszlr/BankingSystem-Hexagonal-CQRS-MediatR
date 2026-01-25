@@ -35,9 +35,6 @@
             <tr>
               <td>#{{ branch.id }}</td>
               <td class="fw-500">{{ branch.branchName }}</td>
-              <td>
-                <span class="badge badge-info">{{ branch.branchCode }}</span>
-              </td>
               <td>{{ branch.city }} / {{ branch.country }}</td>
               <td class="text-right actions-cell">
                 <a [routerLink]="['/branches/update', branch.id]" class="btn btn-sm btn-secondary">

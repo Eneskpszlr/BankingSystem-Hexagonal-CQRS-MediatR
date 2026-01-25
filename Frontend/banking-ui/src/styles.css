@@ -272,3 +272,39 @@ input.ng-invalid.ng-touched {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+
+/* ------------------------------------------------ */
+/* 🔴 FORM VALİDASYON STİLLERİ (Tüm Sayfalar İçin)  */
+/* ------------------------------------------------ */
+
+/* Kullanıcı dokunduktan sonra (touched) hala hata varsa (invalid) çerçeve kırmızı olsun */
+input.ng-invalid.ng-touched,
+select.ng-invalid.ng-touched,
+textarea.ng-invalid.ng-touched {
+  border-color: #ef4444 !important;
+  background-color: rgba(239, 68, 68, 0.02);
+  box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.1);
+}
+
+/* Hata Mesajı Metni */
+.error-message {
+  color: #ef4444;
+  font-size: 0.8rem;
+  margin-top: 4px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  animation: slideDown 0.2s ease-out;
+}
+
+.error-message::before {
+  content: '⚠️';
+  font-size: 0.7rem;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}

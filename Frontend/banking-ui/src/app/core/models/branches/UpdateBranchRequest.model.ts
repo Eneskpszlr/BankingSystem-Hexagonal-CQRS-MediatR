@@ -1,4 +1,3 @@
-
 export interface UpdateBranchRequest {
     id: number;
     branchName: string;
