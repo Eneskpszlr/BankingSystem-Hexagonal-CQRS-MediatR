@@ -1,0 +1,67 @@
+<app-loader [isLoading]="isLoading"></app-loader>
+
+<div class="auth-container fade-in">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h2>Hesap Oluştur</h2>
+      <p>Bankacılık dünyasına katılın</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <div class="form-group">
+          <label>Ad</label>
+          <input type="text" formControlName="firstName" [class.invalid]="hasError('firstName', 'required')">
+          @if (hasError('firstName', 'required')) { <div class="error-msg">Ad zorunludur.</div> }
+        </div>
+        
+        <div class="form-group">
+          <label>Soyad</label>
+          <input type="text" formControlName="lastName" [class.invalid]="hasError('lastName', 'required')">
+          @if (hasError('lastName', 'required')) { <div class="error-msg">Soyad zorunludur.</div> }
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>E-Posta</label>
+        <input type="email" formControlName="email" [class.invalid]="form.get('email')?.invalid && form.get('email')?.touched">
+        
+        @if (hasError('email', 'required')) { <div class="error-msg">E-posta zorunludur.</div> }
+        @if (hasError('email', 'email')) { <div class="error-msg">Geçersiz e-posta formatı.</div> }
+      </div>
+
+      <div class="form-group">
+        <label>Kullanıcı Adı</label>
+        <input type="text" formControlName="userName" [class.invalid]="hasError('userName', 'required')">
+        @if (hasError('userName', 'required')) { <div class="error-msg">Kullanıcı adı zorunludur.</div> }
+      </div>
+
+      <div class="form-group">
+        <label>Şifre</label>
+        <input type="password" formControlName="password" [class.invalid]="form.get('password')?.invalid && form.get('password')?.touched">
+        
+        @if (hasError('password', 'required')) { <div class="error-msg">Şifre zorunludur.</div> }
+        @if (hasError('password', 'minlength')) { <div class="error-msg">Şifre en az 6 karakter olmalıdır.</div> }
+      </div>
+
+      <div class="form-group">
+        <label>Şifre Tekrar</label>
+        <input type="password" formControlName="confirmPassword" [class.invalid]="form.get('confirmPassword')?.invalid && form.get('confirmPassword')?.touched">
+        
+        @if (hasError('confirmPassword', 'required')) { <div class="error-msg">Şifre tekrarı zorunludur.</div> }
+        @if (form.hasError('mustMatch') && form.get('confirmPassword')?.touched) {
+            <div class="error-msg">Şifreler eşleşmiyor.</div>
+        }
+      </div>
+
+      <button type="submit" class="btn-full" [disabled]="form.invalid || isLoading">
+        {{ isLoading ? 'Kaydediliyor...' : 'Kayıt Ol' }}
+      </button>
+
+      <div class="auth-footer">
+        Zaten hesabınız var mı? <a routerLink="/auth/login">Giriş Yap</a>
+      </div>
+    </form>
+  </div>
+</div>

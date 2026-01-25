@@ -1,14 +1,16 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core'; // 1. IMPORT EKLE
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { finalize, forkJoin } from 'rxjs';
 import { AccountService } from '../accounts/services/account.service';
 import { CustomerService } from '../customers/services/customer.service';
 import { BranchService } from '../branches/services/branch.service';
+import { AuthService } from '../../core/services/auth.service';
 import { Loader } from '../../shared/components/loader/loader';
 
 @Component({
   selector: 'app-dashboard',
+  standalone: true,
   imports: [CommonModule, RouterLink, Loader],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
@@ -17,63 +19,82 @@ export class Dashboard implements OnInit {
   private _accountService = inject(AccountService);
   private _customerService = inject(CustomerService);
   private _branchService = inject(BranchService);
-  
-  // 2. INJECT EDİYORUZ (Bunu unutmuşsun)
-  private cd = inject(ChangeDetectorRef); 
+  private _authService = inject(AuthService);
+  private cd = inject(ChangeDetectorRef);
+
+  // Kullanıcı Bilgisi
+  user = this._authService.currentUser;
+  isAdmin = this._authService.isAdmin;
 
   isLoading = true;
 
-  stats = {
+  // Admin İstatistikleri
+  adminStats = {
     totalCustomers: 0,
     totalAccounts: 0,
     totalBranches: 0,
     totalBalanceTRY: 0
   };
 
+  // Müşteri İstatistikleri
+  customerStats = {
+    myAccounts: [] as any[],
+    totalBalance: 0
+  };
+
   ngOnInit(): void {
-    this.loadDashboardData();
+    if (this.isAdmin()) {
+      this.loadAdminData();
+    } else {
+      this.loadCustomerData();
+    }
   }
 
-  loadDashboardData() {
+  // 1. ADMIN VERİLERİ (Genel Bakış)
+  loadAdminData() {
     this.isLoading = true;
-
     forkJoin({
       accounts: this._accountService.getAll(),
       customers: this._customerService.getAll(),
       branches: this._branchService.getAll()
     })
-    .pipe(
-      finalize(() => {
-        this.isLoading = false;
-        this.cd.detectChanges(); // Artık burası hata vermez ✅
-      })
-    )
+    .pipe(finalize(() => { this.isLoading = false; this.cd.detectChanges(); }))
     .subscribe({
       next: (res: any) => {
-        console.log('Veriler Geldi:', res);
+        const accounts = Array.isArray(res.accounts) ? res.accounts : [];
+        const customers = Array.isArray(res.customers) ? res.customers : [];
+        const branches = Array.isArray(res.branches) ? res.branches : [];
 
-        // 1. Müşteri Sayısı
-        const customerList = res.customers?.data || res.customers || [];
-        this.stats.totalCustomers = customerList.length || 0;
+        this.adminStats.totalCustomers = customers.length;
+        this.adminStats.totalBranches = branches.length;
+        this.adminStats.totalAccounts = accounts.length;
 
-        // 2. Şube Sayısı
-        const branchList = res.branches?.data || res.branches || [];
-        this.stats.totalBranches = branchList.length || 0;
-
-        // 3. Hesap Sayısı
-        const accounts = res.accounts?.data || res.accounts || [];
-        this.stats.totalAccounts = accounts.length || 0;
-
-        // Bakiye Hesaplama
-        this.stats.totalBalanceTRY = Array.isArray(accounts) 
-          ? accounts
-              .filter((acc: any) => acc.currencyCode === 'TRY')
-              .reduce((sum: number, acc: any) => sum + (acc.balance || 0), 0)
-          : 0;
-      },
-      error: (err) => {
-        console.error('Hata oluştu:', err);
+        this.adminStats.totalBalanceTRY = accounts
+          .filter((acc: any) => acc.currencyCode === 'TRY')
+          .reduce((sum: number, acc: any) => sum + (acc.balance || 0), 0);
       }
     });
+  }
+
+  // 2. MÜŞTERİ VERİLERİ (Sadece Benim Hesaplarım)
+  loadCustomerData() {
+    const userId = this.user()?.id;
+    if (!userId) return;
+
+    this.isLoading = true;
+    
+    this._accountService.getByCustomerId(userId)
+      .pipe(finalize(() => { this.isLoading = false; this.cd.detectChanges(); }))
+      .subscribe({
+        next: (res: any) => {
+          const myAccounts = Array.isArray(res) ? res : (res.data || []);
+          this.customerStats.myAccounts = myAccounts;
+
+          // Toplam Varlık (Basitçe TRY olanları toplayalım)
+          this.customerStats.totalBalance = myAccounts
+            .filter((acc: any) => acc.currencyCode === 'TRY')
+            .reduce((sum: number, acc: any) => sum + (acc.balance || 0), 0);
+        }
+      });
   }
 }

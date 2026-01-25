@@ -14,18 +14,18 @@
 .page-title {
   font-size: 1.75rem;
   font-weight: 700;
-  color: #f1f5f9; /* 🔥 Beyaz (Slate-100) */
+  color: #f1f5f9;
   margin: 0;
 }
 
 /* --- FİLTRE KARTI (DARK THEME) --- */
 .filter-card {
-  background: #1e293b; /* 🔥 Koyu Lacivert (Slate-800) */
+  background: #1e293b;
   padding: 1.5rem;
   border-radius: 16px;
-  border: 1px solid #334155; /* 🔥 Silik Çerçeve */
+  border: 1px solid #334155;
   margin-bottom: 2rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); /* Daha koyu gölge */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
 }
 
 .filters-layout {
@@ -59,7 +59,7 @@
   display: block;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #94a3b8; /* 🔥 Gri Etiketler (Slate-400) */
+  color: #94a3b8;
   margin-bottom: 0.4rem;
   margin-left: 2px;
 }
@@ -70,10 +70,10 @@
   width: 100%;
   height: 48px;
   padding: 0 1rem;
-  border: 1px solid #334155; /* Çerçeve rengi koyu */
+  border: 1px solid #334155;
   border-radius: 10px;
-  background-color: #0f172a; /* 🔥 Daha koyu iç arka plan (Slate-900) */
-  color: #e2e8f0; /* 🔥 Yazı rengi açık gri (Slate-200) */
+  background-color: #0f172a;
+  color: #e2e8f0;
   font-size: 0.95rem;
   font-weight: 500;
   transition: all 0.2s ease-in-out;
@@ -90,7 +90,7 @@
 .form-group select:focus,
 .form-group input:focus {
   background-color: #0f172a;
-  border-color: #3b82f6; /* Mavi focus rengi */
+  border-color: #3b82f6;
   outline: none;
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
 }
@@ -106,10 +106,10 @@
 .btn-clear {
   height: 48px;
   padding: 0 1.5rem;
-  background-color: #334155; /* Koyu gri buton */
+  background-color: #334155;
   border: 1px solid #475569;
   border-radius: 10px;
-  color: #e2e8f0; /* Açık yazı */
+  color: #e2e8f0;
   font-weight: 600;
   font-size: 0.9rem;
   cursor: pointer;
@@ -120,13 +120,13 @@
 }
 
 .btn-clear:hover {
-  background-color: #475569; /* Hover olunca açıl */
+  background-color: #475569;
   color: #ffffff;
 }
 
 /* --- TABLO ALANI (DARK THEME) --- */
 .table-container {
-  background: #1e293b; /* 🔥 Kart ile aynı koyu renk */
+  background: #1e293b;
   border-radius: 16px;
   border: 1px solid #334155;
   overflow: hidden;
@@ -142,7 +142,7 @@ table {
 
 /* Tablo Başlıkları */
 thead {
-  background-color: #0f172a; /* 🔥 Başlık daha koyu (Slate-900) */
+  background-color: #0f172a;
   border-bottom: 1px solid #334155;
 }
 
@@ -153,28 +153,28 @@ th {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #94a3b8; /* Muted Text */
+  color: #94a3b8;
 }
 
 /* Tablo Satırları */
 td {
   padding: 1.25rem 1.5rem;
-  color: #e2e8f0; /* 🔥 Ana metin açık renk */
+  color: #e2e8f0;
   font-size: 0.95rem;
-  border-bottom: 1px solid #334155; /* Satır çizgileri silik */
+  border-bottom: 1px solid #334155;
   vertical-align: middle;
 }
 
 /* Satır Hover Efekti */
 tbody tr:hover {
-  background-color: #28364d; /* 🔥 Hover olunca hafif aydınlan */
+  background-color: #28364d;
 }
 
 tbody tr:last-child td {
   border-bottom: none;
 }
 
-/* --- DURUM BADGE'LERİ (Koyu Temaya Uygun) --- */
+/* --- DURUM BADGE'LERİ--- */
 .badge {
   padding: 0.35rem 0.85rem;
   border-radius: 999px;
@@ -219,8 +219,8 @@ tbody tr:last-child td {
   font-feature-settings: "tnum";
 }
 
-.text-success { color: #4ade80; } /* Koyu temada parlak yeşil */
-.text-danger { color: #f87171; }  /* Koyu temada parlak kırmızı */
+.text-success { color: #4ade80; }
+.text-danger { color: #f87171; }
 
 /* --- EMPTY STATES --- */
 .no-selection-state, .empty-state {

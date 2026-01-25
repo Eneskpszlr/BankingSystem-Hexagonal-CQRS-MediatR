@@ -1,7 +1,13 @@
-export interface ApiResponse<T> {
+export interface CommandResponse {
     success: boolean;
     message: string;
-    errors?: string[];     // Backend'de ValidationException dönerse burası dolar
-    data: T;               // Asıl veri burada
-    entityId?: number;     // Create işleminden sonra dönen ID
+    entityId?: number;       // Sadece Create işleminde döner
+    referenceNumber?: string; // Sadece Transfer işleminde döner
+}
+
+export interface ErrorResponse {
+    success: boolean;
+    message: string;         // "Validasyon hatası"
+    exceptionType?: string;  // "ValidationException"
+    errors?: string[];       // ["Email boş olamaz"]
 }

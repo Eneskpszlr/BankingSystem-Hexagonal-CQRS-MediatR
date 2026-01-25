@@ -2,9 +2,13 @@ import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
 import { NotificationService } from '../services/notification';
+import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const notificationService = inject(NotificationService);
+  const router = inject(Router);
+  const authService = inject(AuthService);
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
@@ -28,7 +32,9 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
             break;
 
           case 401: 
-            errorMessage = 'Oturum süreniz doldu. Lütfen tekrar giriş yapın. (401)'; 
+            errorMessage = 'Oturum süreniz doldu. Lütfen tekrar giriş yapın.';
+            localStorage.removeItem('onion_bank_token');
+            router.navigate(['/auth/login']);
             break;
             
           case 403: 

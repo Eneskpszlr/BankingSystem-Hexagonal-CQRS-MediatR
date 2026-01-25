@@ -6,12 +6,20 @@
       
       <div class="info-row">
         <label>Hesap No</label>
-        <div class="info-value">#{{ account.id }}</div>
+        <div class="info-value">
+            {{ account.accountNumber ? account.accountNumber : ('#' + account.id) }}
+        </div>
       </div>
 
       <div class="info-row">
         <label>Müşteri</label>
-        <div class="info-value">{{ account.firstName || '-' }} {{ account.lastName || '' }}</div>
+        <div class="info-value">
+            @if(account.firstName) {
+                {{ account.firstName }} {{ account.lastName }}
+            } @else {
+                Müşteri ID: {{ account.customerId }}
+            }
+        </div>
       </div>
 
       <div class="info-row">
@@ -24,8 +32,8 @@
       <div class="info-row">
         <label>Durum</label>
         <span class="badge" 
-          [class.badge-success]="account.status === 'Active'" 
-          [class.badge-danger]="account.status === 'Passive'">
+          [class.badge-success]="account.status === 'Active' || account.status === '1'" 
+          [class.badge-danger]="account.status === 'Passive' || account.status === 'Deleted' || account.status === '3'">
           {{ account.status | statusTr }}
         </span>
       </div>

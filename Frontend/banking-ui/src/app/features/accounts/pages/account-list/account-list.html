@@ -24,7 +24,8 @@
         <thead>
           <tr>
             <th>Hesap No</th>
-            <th>Müşteri</th> <th>Bakiye</th>
+            <th>Müşteri</th> 
+            <th>Bakiye</th>
             <th>Oluşturulma Tarihi</th>
             <th>Durum</th>
             <th class="text-right">İşlemler</th>
@@ -35,12 +36,17 @@
           @for (account of accounts; track account.id) {
             <tr>
               <td>
-                 <span class="badge badge-info">#{{ account.id }}</span>
+                 <span class="badge badge-info">{{ account.accountNumber || ('#' + account.id) }}</span>
               </td>
               
               <td>
-                <div class="fw-500">{{ account.firstName }} {{ account.lastName }}</div>
-                <small class="text-muted" style="font-size: 0.8rem;">Müşteri #{{ account.customerId }}</small>
+                <div class="fw-500">
+                    @if(account.firstName) {
+                        {{ account.firstName }} {{ account.lastName }}
+                    } @else {
+                        Müşteri #{{ account.customerId }}
+                    }
+                </div>
               </td>
               
               <td>
@@ -55,14 +61,10 @@
               
               <td>
                 <span class="badge" 
-                  [class.badge-success]="account.status === 'Active' || account.status === 'Inserted' || account.status === 'Updated'"
-                  [class.badge-danger]="account.status === 'Passive' || account.status === 'Deleted'">
+                  [class.badge-success]="account.status === 'Active' || account.status === 'Inserted' || account.status === 'Updated' || account.status === '1'"
+                  [class.badge-danger]="account.status === 'Passive' || account.status === 'Deleted' || account.status === '2' || account.status === '3'">
                   
-                  @if (account.status === 'Active' || account.status === 'Inserted' || account.status === 'Updated') {
-                    Aktif
-                  } @else {
-                    Pasif
-                  }
+                  {{ account.status | statusTr }}
                 </span>
               </td>
               
@@ -88,5 +90,4 @@
       </table>
     </div>
   </div>
-
 }
