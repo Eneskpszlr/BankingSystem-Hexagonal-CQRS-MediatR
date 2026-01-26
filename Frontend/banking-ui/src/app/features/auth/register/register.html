@@ -12,15 +12,37 @@
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
         <div class="form-group">
           <label>Ad</label>
-          <input type="text" formControlName="firstName" [class.invalid]="hasError('firstName', 'required')">
+          <input type="text" formControlName="firstName" [class.invalid]="form.get('firstName')?.invalid && form.get('firstName')?.touched">
           @if (hasError('firstName', 'required')) { <div class="error-msg">Ad zorunludur.</div> }
+          @if (getServerError('firstName')) { <div class="error-msg">{{ getServerError('firstName') }}</div> }
         </div>
         
         <div class="form-group">
           <label>Soyad</label>
-          <input type="text" formControlName="lastName" [class.invalid]="hasError('lastName', 'required')">
+          <input type="text" formControlName="lastName" [class.invalid]="form.get('lastName')?.invalid && form.get('lastName')?.touched">
           @if (hasError('lastName', 'required')) { <div class="error-msg">Soyad zorunludur.</div> }
+          @if (getServerError('lastName')) { <div class="error-msg">{{ getServerError('lastName') }}</div> }
         </div>
+      </div>
+
+      <div class="form-group">
+        <label>TC Kimlik No</label>
+        <input type="text" formControlName="tckn" maxlength="11" placeholder="11 haneli TC Kimlik No" 
+               [class.invalid]="form.get('tckn')?.invalid && form.get('tckn')?.touched">
+        
+        @if (hasError('tckn', 'required')) { <div class="error-msg">TCKN zorunludur.</div> }
+        @if (hasError('tckn', 'minlength') || hasError('tckn', 'maxlength')) { <div class="error-msg">TCKN 11 haneli olmalıdır.</div> }
+        
+        @if (getServerError('tckn')) { <div class="error-msg">{{ getServerError('tckn') }}</div> }
+      </div>
+
+      <div class="form-group">
+        <label>Doğum Tarihi</label>
+        <input type="date" formControlName="birthDate" 
+               [class.invalid]="form.get('birthDate')?.invalid && form.get('birthDate')?.touched">
+        
+        @if (hasError('birthDate', 'required')) { <div class="error-msg">Doğum tarihi zorunludur.</div> }
+        @if (getServerError('birthDate')) { <div class="error-msg">{{ getServerError('birthDate') }}</div> }
       </div>
 
       <div class="form-group">
@@ -29,12 +51,15 @@
         
         @if (hasError('email', 'required')) { <div class="error-msg">E-posta zorunludur.</div> }
         @if (hasError('email', 'email')) { <div class="error-msg">Geçersiz e-posta formatı.</div> }
+        @if (getServerError('email')) { <div class="error-msg">{{ getServerError('email') }}</div> }
       </div>
 
       <div class="form-group">
         <label>Kullanıcı Adı</label>
-        <input type="text" formControlName="userName" [class.invalid]="hasError('userName', 'required')">
+        <input type="text" formControlName="userName" [class.invalid]="form.get('userName')?.invalid && form.get('userName')?.touched">
+        
         @if (hasError('userName', 'required')) { <div class="error-msg">Kullanıcı adı zorunludur.</div> }
+        @if (getServerError('userName')) { <div class="error-msg">{{ getServerError('userName') }}</div> }
       </div>
 
       <div class="form-group">
@@ -43,6 +68,7 @@
         
         @if (hasError('password', 'required')) { <div class="error-msg">Şifre zorunludur.</div> }
         @if (hasError('password', 'minlength')) { <div class="error-msg">Şifre en az 6 karakter olmalıdır.</div> }
+        @if (getServerError('password')) { <div class="error-msg">{{ getServerError('password') }}</div> }
       </div>
 
       <div class="form-group">

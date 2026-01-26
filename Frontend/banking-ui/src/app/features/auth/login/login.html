@@ -11,11 +11,11 @@
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       
       <div class="form-group">
-        <label>Kullanıcı Adı</label>
-        <input type="text" formControlName="userName" [class.invalid]="hasError('userName', 'required')">
+        <label>Tc Kimlik No / Kullanıcı Adı</label>
+        <input type="text" formControlName="userName" placeholder="TCKN giriniz" [class.invalid]="hasError('userName', 'required')">
         
         @if (hasError('userName', 'required')) { 
-          <div class="error-msg">Kullanıcı adı boş bırakılamaz.</div> 
+          <div class="error-msg">TC Kimlik No boş bırakılamaz.</div> 
         }
       </div>
 

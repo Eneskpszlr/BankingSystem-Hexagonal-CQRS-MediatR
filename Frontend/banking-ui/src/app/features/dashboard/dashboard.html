@@ -91,11 +91,13 @@
                     {{ acc.balance | currency: (acc.currencyCode || 'TRY'):'symbol-narrow' }}
                   </div>
                   <div class="acc-status">
-                     <small>{{ acc.status === 'Active' ? 'Aktif' : 'Pasif' }}</small>
+                    <span class="badge" [class.active]="acc.status === 1 || acc.status === 'Active'">
+                      {{ (acc.status === 1 || acc.status === 'Active') ? 'Aktif' : 'Pasif' }}
+                    </span>
                   </div>
                   <div class="acc-actions">
-                    <a routerLink="/transactions" class="btn-link">Hareketler</a>
-                    <a routerLink="/transactions/create" class="btn-link">Transfer</a>
+                    <a [routerLink]="['/transactions']" [queryParams]="{ accountId: acc.id }" class="btn-link">Hareketler</a>
+                    <a [routerLink]="['/transactions/create']" [queryParams]="{ fromAccountId: acc.id }" class="btn-link">Transfer</a>
                   </div>
                 </div>
               }

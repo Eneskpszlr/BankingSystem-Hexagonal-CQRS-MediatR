@@ -205,3 +205,26 @@
 .btn-link:hover {
   text-decoration: underline;
 }
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed var(--border-color);
+  border-radius: 12px;
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+.badge {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+}
+.badge.active {
+  background: rgba(34, 197, 94, 0.2);
+  color: #86efac;
+}

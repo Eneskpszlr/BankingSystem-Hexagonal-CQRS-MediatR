@@ -1,5 +1,5 @@
 // GİRİŞ İSTEĞİ
 export interface LoginRequest {
-    userName: string;
+    identifier: string;
     password: string;
 }

@@ -58,20 +58,29 @@ export class Dashboard implements OnInit {
       customers: this._customerService.getAll(),
       branches: this._branchService.getAll()
     })
-    .pipe(finalize(() => { this.isLoading = false; this.cd.detectChanges(); }))
+    .pipe(
+      finalize(() => { 
+        this.isLoading = false; 
+        this.cd.detectChanges(); 
+      })
+    )
     .subscribe({
       next: (res: any) => {
-        const accounts = Array.isArray(res.accounts) ? res.accounts : [];
-        const customers = Array.isArray(res.customers) ? res.customers : [];
-        const branches = Array.isArray(res.branches) ? res.branches : [];
+        const accounts = Array.isArray(res.accounts) ? res.accounts : (res.accounts?.data || []);
+        const customers = Array.isArray(res.customers) ? res.customers : (res.customers?.data || []);
+        const branches = Array.isArray(res.branches) ? res.branches : (res.branches?.data || []);
 
         this.adminStats.totalCustomers = customers.length;
         this.adminStats.totalBranches = branches.length;
         this.adminStats.totalAccounts = accounts.length;
 
+        // Sadece TRY hesaplarını topla
         this.adminStats.totalBalanceTRY = accounts
           .filter((acc: any) => acc.currencyCode === 'TRY')
           .reduce((sum: number, acc: any) => sum + (acc.balance || 0), 0);
+      },
+      error: (err) => {
+        console.error('Admin verileri yüklenirken hata:', err);
       }
     });
   }
@@ -79,21 +88,41 @@ export class Dashboard implements OnInit {
   // 2. MÜŞTERİ VERİLERİ (Sadece Benim Hesaplarım)
   loadCustomerData() {
     const userId = this.user()?.id;
-    if (!userId) return;
+    
+    // Eğer ID yoksa işlemi durdur (Güvenlik)
+    if (!userId) {
+      this.isLoading = false;
+      return;
+    }
 
     this.isLoading = true;
     
     this._accountService.getByCustomerId(userId)
-      .pipe(finalize(() => { this.isLoading = false; this.cd.detectChanges(); }))
+      .pipe(
+        finalize(() => { 
+          this.isLoading = false; 
+          this.cd.detectChanges(); 
+        })
+      )
       .subscribe({
         next: (res: any) => {
+          // Başarılı gelirse listeyi al
           const myAccounts = Array.isArray(res) ? res : (res.data || []);
           this.customerStats.myAccounts = myAccounts;
 
-          // Toplam Varlık (Basitçe TRY olanları toplayalım)
+          // Toplam Varlık Hesapla (Sadece TRY)
           this.customerStats.totalBalance = myAccounts
             .filter((acc: any) => acc.currencyCode === 'TRY')
             .reduce((sum: number, acc: any) => sum + (acc.balance || 0), 0);
+        },
+        error: (err) => {
+          if (err.status === 404) {
+            console.log('Kullanıcının henüz hesabı yok (404 Normal Durum).');
+            this.customerStats.myAccounts = [];
+            this.customerStats.totalBalance = 0;
+          } else {
+            console.error('Müşteri verileri yüklenirken beklenmedik hata:', err);
+          }
         }
       });
   }

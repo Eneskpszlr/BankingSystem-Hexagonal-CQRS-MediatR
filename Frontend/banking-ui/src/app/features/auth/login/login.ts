@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectorRef} from '@angular/core';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -29,11 +29,15 @@ export class Login {
   });
 
   onSubmit() {
-    if (this.form.invalid) return;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
     this.isLoading = true;
+
     const request = {
-      userName: this.form.value.userName!,
+      identifier: this.form.value.userName!, 
       password: this.form.value.password!
     };
 
@@ -44,24 +48,49 @@ export class Login {
           this.cd.detectChanges();
         })
       )
-    .subscribe({
-      next: () => {
-        this.isLoading = false;
-        this._notificationService.success('Giriş başarılı! Yönlendiriliyorsunuz...');
-        this._router.navigate(['/']); // Dashboard'a git
-      },
-      error: (err) => {
-        console.error('Giriş Hatası Detayı:', err);
-          if (err.status === 400 && err.error?.title) {
-             this._notificationService.error(err.error.title || 'Giriş bilgileri hatalı veya eksik.');
-          } else {
-             this._notificationService.error('Giriş başarısız. Lütfen bilgilerinizi kontrol edin.');
+      .subscribe({
+        next: () => {
+          this._notificationService.success('Giriş başarılı! Yönlendiriliyorsunuz...');
+          this._router.navigate(['/']); // Dashboard'a git
+        },
+        error: (err) => {
+          console.error('Giriş Hatası Detayı:', err);
+
+          if (err.status === 400 && err.error?.errors) {
+             const validationErrors = err.error.errors;
+             
+             Object.keys(validationErrors).forEach(key => {
+                 let controlName = key.charAt(0).toLowerCase() + key.slice(1);
+                 
+                 if(controlName === 'identifier') controlName = 'userName';
+
+                 const control = this.form.get(controlName);
+                 if (control) {
+                     control.setErrors({ serverError: validationErrors[key][0] });
+                     control.markAsTouched();
+                 }
+             });
           }
-      }
-    });
+          else if (err.error?.title) {
+             this._notificationService.error(err.error.title);
+          }
+          else if (typeof err.error === 'string') {
+             this._notificationService.error(err.error);
+          }
+          else {
+             this._notificationService.error('Giriş başarısız. Bilgilerinizi kontrol edin.');
+          }
+        }
+      });
   }
+
   hasError(controlName: string, errorName: string): boolean {
     const control = this.form.get(controlName);
     return !!(control && control.hasError(errorName) && (control.touched || control.dirty));
+  }
+
+  getServerError(controlName: string): string | null {
+    const control = this.form.get(controlName);
+    return control?.errors?.['serverError'] || null;
   }
 }
